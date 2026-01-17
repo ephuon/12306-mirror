@@ -121,8 +121,40 @@ describe('Full-Stack Integration: <PassengerList />', () => {
     fireEvent.click(screen.getByText('搜索'));
 
     await waitFor(() => {
-        expect(screen.queryByText('Existing Passenger')).not.toBeInTheDocument();
-        expect(screen.getByText('Target Person')).toBeInTheDocument();
-    });
-  });
-});
+         expect(screen.queryByText('Existing Passenger')).not.toBeInTheDocument();
+         expect(screen.getByText('Target Person')).toBeInTheDocument();
+     });
+   });
+
+   it('adds a new passenger', async () => {
+      render(<BrowserRouter><PassengerList /></BrowserRouter>);
+
+      // Wait for loading to finish
+      await waitFor(() => {
+          expect(screen.getByText('添加乘车人')).toBeInTheDocument();
+      });
+ 
+      // Open Add Modal
+      fireEvent.click(screen.getByText('添加乘车人'));
+      expect(screen.getByText('基本信息')).toBeInTheDocument(); // Header in Modal
+
+     // Fill form
+     fireEvent.change(screen.getByLabelText('姓名'), { target: { value: 'New User' } });
+     fireEvent.change(screen.getByLabelText('证件号码'), { target: { value: '123123123123123123' } });
+     fireEvent.change(screen.getByLabelText('手机号'), { target: { value: '13600136000' } });
+
+     // Submit
+     const saveBtn = screen.getByRole('button', { name: '保存' });
+     fireEvent.click(saveBtn);
+
+     // Verify update (Mock backend should return success, and component should re-fetch)
+     // We need to mock the POST request handler in the test setup if we want it to actually work with the real backend logic, 
+     // or rely on the integration test server. 
+     // Since we are using a real backend server (spawned in beforeAll), the POST request will go to the SQLite DB.
+     // So this is a real end-to-end integration test!
+     
+     await waitFor(() => {
+         expect(screen.getByText('New User')).toBeInTheDocument();
+     });
+   });
+ });

@@ -237,7 +237,8 @@ router.post('/forgot-password/reset', async (req, res) => {
           if (!userId || !name || !id_type || !id_no || !phone) {
               return res.status(400).json({ success: false, message: 'Missing required fields' });
           }
-          const id = await operations.addPassenger(req.body);
+          const passengerData = { user_id: userId, name, id_type, id_no, phone, type };
+          const id = await operations.addPassenger(passengerData);
           res.status(201).json({ success: true, data: { id } });
       } catch (err) {
           res.status(500).json({ success: false, message: err.message });

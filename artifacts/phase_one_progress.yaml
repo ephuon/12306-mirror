@@ -96,10 +96,12 @@
     api_ids:
       - GET /api/passengers
       - POST /api/passengers
+      - API_POST_PASSENGERS
     func_ids:
       - getPassengers
       - searchPassengers
       - addPassenger
+      - FUNC_ADD_PASSENGER
 - id: REQ-3-2-1
   status: processed
 - id: REQ-3-2-2

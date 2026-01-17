@@ -213,7 +213,7 @@ nodes:
   PassengerList:
     type: UI
     path: frontend/src/pages/center/PassengerList.jsx
-    description: Passenger list management component with search functionality
+    description: Passenger management list with add/delete capabilities
   GET /api/passengers:
     type: API
     path: backend/src/routes/api.js
@@ -235,6 +235,16 @@ nodes:
     db_tables:
       - passengers
   addPassenger:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: addPassenger(passengerData)
+    db_tables:
+      - passengers
+  API_POST_PASSENGERS:
+    type: API
+    path: backend/src/routes/api.js
+    signature: POST /api/passengers
+  FUNC_ADD_PASSENGER:
     type: FUNC
     path: backend/src/database/operations.js
     signature: addPassenger(passengerData)
@@ -495,4 +505,19 @@ edges:
     relation: DEFINES
   - from: REQ-3-2
     to: addPassenger
+    relation: DEFINES
+  - from: PassengerList
+    to: API_GET_PASSENGERS
+    relation: CALLS
+  - from: PassengerList
+    to: API_POST_PASSENGERS
+    relation: CALLS
+  - from: REQ-3-2
+    to: API_POST_PASSENGERS
+    relation: DEFINES
+  - from: API_POST_PASSENGERS
+    to: FUNC_ADD_PASSENGER
+    relation: CALLS
+  - from: REQ-3-2
+    to: FUNC_ADD_PASSENGER
     relation: DEFINES

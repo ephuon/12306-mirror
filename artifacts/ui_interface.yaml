@@ -98,9 +98,11 @@ SearchResultPage:
 PassengerList:
   related_req_id: REQ-3-2
   path: frontend/src/pages/center/PassengerList.jsx
-  description: Passenger list management component with search functionality
+  description: Passenger management list with add/delete capabilities
   upstream_ids:
     - getPassengers
     - searchPassengers
     - addPassenger
-  downstream_ids: []
+  downstream_ids:
+    - API_GET_PASSENGERS
+    - API_POST_PASSENGERS

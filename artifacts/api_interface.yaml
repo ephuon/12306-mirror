@@ -64,3 +64,11 @@ POST /api/passengers:
   upstream_ids: []
   downstream_ids:
     - addPassenger
+API_POST_PASSENGERS:
+  related_req_id: REQ-3-2
+  path: backend/src/routes/api.js
+  signature: POST /api/passengers
+  upstream_ids:
+    - PassengerList
+  downstream_ids:
+    - FUNC_ADD_PASSENGER

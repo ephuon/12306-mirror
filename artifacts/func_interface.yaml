@@ -58,3 +58,11 @@ addPassenger:
   upstream_ids: []
   db_tables:
     - passengers
+FUNC_ADD_PASSENGER:
+  related_req_id: REQ-3-2
+  path: backend/src/database/operations.js
+  signature: addPassenger(passengerData)
+  upstream_ids:
+    - API_POST_PASSENGERS
+  db_tables:
+    - passengers
