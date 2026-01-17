@@ -3,7 +3,8 @@ HomePage:
   path: frontend/src/pages/HomePage.jsx
   description: 12306 Home Page with header, nav, and search panel placeholder
   upstream_ids: []
-  downstream_ids: []
+  downstream_ids:
+    - ui_quick_search_panel
 ui_login_page:
   related_req_id: REQ-1
   path: frontend/src/pages/Login.jsx
@@ -28,3 +29,11 @@ ui_forgot_password_page:
     - api_forgot_password_send_code
     - api_forgot_password_verify_code
     - api_forgot_password_reset
+ui_quick_search_panel:
+  related_req_id: REQ-2-1
+  path: frontend/src/components/QuickSearchPanel.jsx
+  description: Quick Search Panel Component
+  upstream_ids:
+    - HomePage
+  downstream_ids:
+    - api_query_ticket

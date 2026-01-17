@@ -34,7 +34,10 @@
 - id: REQ-2
   status: processed
 - id: REQ-2-1
-  status: unprocessed
+  status: processed
+  artifacts:
+    ui_ids:
+      - ui_quick_search_panel
 - id: REQ-2-1-1
   status: unprocessed
 - id: REQ-2-1-2

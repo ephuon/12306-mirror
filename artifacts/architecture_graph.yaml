@@ -146,6 +146,10 @@ nodes:
     signature: updatePassword(username, newPassword)
     db_tables:
       - users
+  ui_quick_search_panel:
+    type: UI
+    path: frontend/src/components/QuickSearchPanel.jsx
+    description: Quick Search Panel Component
 edges:
   - from: ROOT
     to: REQ-1
@@ -279,3 +283,12 @@ edges:
   - from: REQ-1-3
     to: func_updatePassword
     relation: DEFINES
+  - from: HomePage
+    to: ui_quick_search_panel
+    relation: CALLS
+  - from: REQ-2-1
+    to: ui_quick_search_panel
+    relation: DEFINES
+  - from: ui_quick_search_panel
+    to: api_query_ticket
+    relation: CALLS
