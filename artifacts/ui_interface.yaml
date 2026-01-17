@@ -51,3 +51,21 @@ ui_date_picker:
   description: Date picker component with month view and date selection logic
   upstream_ids: []
   downstream_ids: []
+ui_search_result_page:
+  related_req_id: REQ-2-2
+  path: frontend/src/pages/SearchResultPage.jsx
+  description: Main Search Result Page skeleton
+  upstream_ids: []
+  downstream_ids: []
+ui_header:
+  related_req_id: REQ-2-2
+  path: frontend/src/components/Header.jsx
+  description: Global Header Component
+  upstream_ids: []
+  downstream_ids: []
+ui_navbar:
+  related_req_id: REQ-2-2
+  path: frontend/src/components/Navbar.jsx
+  description: Global Navigation Bar with Dropdown
+  upstream_ids: []
+  downstream_ids: []

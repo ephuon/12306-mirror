@@ -60,7 +60,12 @@
     ui_ids:
       - ui_date_picker
 - id: REQ-2-2
-  status: unprocessed
+  status: processed
+  artifacts:
+    ui_ids:
+      - ui_search_result_page
+      - ui_header
+      - ui_navbar
 - id: REQ-2-2-1
   status: unprocessed
 - id: REQ-2-2-2

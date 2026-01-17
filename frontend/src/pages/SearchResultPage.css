@@ -1,0 +1,13 @@
+.search-content {
+  background-color: #f8f8f8;
+  min-height: calc(100vh - 200px);
+  padding: 20px 0;
+}
+
+.search-content .container {
+  width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 20px;
+  min-height: 400px;
+}
