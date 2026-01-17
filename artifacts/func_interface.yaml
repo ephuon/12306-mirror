@@ -37,3 +37,24 @@ func_search_stations:
   upstream_ids: []
   db_tables:
     - stations
+getPassengers:
+  related_req_id: REQ-3-2
+  path: backend/src/database/operations.js
+  signature: getPassengers(userId)
+  upstream_ids: []
+  db_tables:
+    - passengers
+searchPassengers:
+  related_req_id: REQ-3-2
+  path: backend/src/database/operations.js
+  signature: searchPassengers(userId, query)
+  upstream_ids: []
+  db_tables:
+    - passengers
+addPassenger:
+  related_req_id: REQ-3-2
+  path: backend/src/database/operations.js
+  signature: addPassenger(passengerData)
+  upstream_ids: []
+  db_tables:
+    - passengers

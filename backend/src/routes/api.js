@@ -212,4 +212,36 @@ router.post('/forgot-password/reset', async (req, res) => {
     res.json({ success: true, data: filtered });
   });
 
+  // Passenger APIs
+  router.get('/passengers', async (req, res) => {
+    try {
+        const { userId, q } = req.query;
+        if (!userId) {
+            return res.status(400).json({ success: false, message: 'Missing userId' });
+        }
+        let passengers;
+        if (q) {
+            passengers = await operations.searchPassengers(userId, q);
+        } else {
+            passengers = await operations.getPassengers(userId);
+        }
+        res.json({ success: true, data: passengers });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+  });
+
+  router.post('/passengers', async (req, res) => {
+      try {
+          const { userId, name, id_type, id_no, phone, type } = req.body;
+          if (!userId || !name || !id_type || !id_no || !phone) {
+              return res.status(400).json({ success: false, message: 'Missing required fields' });
+          }
+          const id = await operations.addPassenger(req.body);
+          res.status(201).json({ success: true, data: { id } });
+      } catch (err) {
+          res.status(500).json({ success: false, message: err.message });
+      }
+  });
+
 module.exports = router;

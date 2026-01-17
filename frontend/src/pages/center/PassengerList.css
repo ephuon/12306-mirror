@@ -1,0 +1,90 @@
+
+.passenger-list {
+    padding: 20px;
+    background: #fff;
+    min-height: 500px;
+}
+
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #3b99fc;
+    padding-bottom: 10px;
+}
+
+.header-actions h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+}
+
+.search-box input {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.search-box button {
+    padding: 5px 15px;
+    background-color: #3b99fc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-add {
+    background-color: #ff8c00;
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.passenger-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.passenger-table th {
+    background-color: #f0f0f0;
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.passenger-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #0078d7;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.text-danger {
+    color: #ff4d4f;
+}
+
+.empty-tip {
+    text-align: center;
+    padding: 30px;
+    color: #999;
+}

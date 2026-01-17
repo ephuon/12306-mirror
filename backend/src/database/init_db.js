@@ -67,6 +67,17 @@ const db = new sqlite3.Database(dbPath, (err) => {
         FOREIGN KEY(station_id) REFERENCES stations(id)
       )`);
 
+      db.run(`CREATE TABLE IF NOT EXISTS passengers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        name TEXT,
+        id_type TEXT,
+        id_no TEXT,
+        phone TEXT,
+        type TEXT DEFAULT '成人',
+        FOREIGN KEY(user_id) REFERENCES users(id)
+      )`);
+
       // Seed Data
       db.get("SELECT count(*) as count FROM stations", (err, row) => {
           if (!err && row && row.count === 0) {

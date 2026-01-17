@@ -121,6 +121,37 @@ const searchStations = (query) => {
   });
 };
 
+const getPassengers = (userId) => {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM passengers WHERE user_id = ?', [userId], (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows);
+        });
+    });
+};
+
+const searchPassengers = (userId, query) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM passengers WHERE user_id = ? AND name LIKE ?';
+        db.all(sql, [userId, `%${query}%`], (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows);
+        });
+    });
+};
+
+const addPassenger = (passengerData) => {
+    return new Promise((resolve, reject) => {
+        const { user_id, name, id_type, id_no, phone, type } = passengerData;
+        const stmt = db.prepare('INSERT INTO passengers (user_id, name, id_type, id_no, phone, type) VALUES (?, ?, ?, ?, ?, ?)');
+        stmt.run(user_id, name, id_type, id_no, phone, type, function(err) {
+            if (err) return reject(err);
+            resolve(this.lastID);
+        });
+        stmt.finalize();
+    });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -129,5 +160,8 @@ module.exports = {
   verifyCode,
   updatePassword,
   getAllStations,
-  searchStations
+  searchStations,
+  getPassengers,
+  searchPassengers,
+  addPassenger
 };

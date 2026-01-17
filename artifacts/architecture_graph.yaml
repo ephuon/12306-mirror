@@ -210,6 +210,36 @@ nodes:
     type: API
     path: backend/src/routes/api.js
     signature: GET /tickets
+  PassengerList:
+    type: UI
+    path: frontend/src/pages/center/PassengerList.jsx
+    description: Passenger list management component with search functionality
+  GET /api/passengers:
+    type: API
+    path: backend/src/routes/api.js
+    signature: GET /api/passengers?userId={userId}&q={query}
+  POST /api/passengers:
+    type: API
+    path: backend/src/routes/api.js
+    signature: POST /api/passengers
+  getPassengers:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: getPassengers(userId)
+    db_tables:
+      - passengers
+  searchPassengers:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: searchPassengers(userId, query)
+    db_tables:
+      - passengers
+  addPassenger:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: addPassenger(passengerData)
+    db_tables:
+      - passengers
 edges:
   - from: ROOT
     to: REQ-1
@@ -429,4 +459,40 @@ edges:
     relation: CALLS
   - from: REQ-2-2-3
     to: GetTickets
+    relation: DEFINES
+  - from: REQ-3-2
+    to: PassengerList
+    relation: DEFINES
+  - from: getPassengers
+    to: PassengerList
+    relation: CALLS
+  - from: searchPassengers
+    to: PassengerList
+    relation: CALLS
+  - from: addPassenger
+    to: PassengerList
+    relation: CALLS
+  - from: REQ-3-2
+    to: GET /api/passengers
+    relation: DEFINES
+  - from: GET /api/passengers
+    to: getPassengers
+    relation: CALLS
+  - from: GET /api/passengers
+    to: searchPassengers
+    relation: CALLS
+  - from: REQ-3-2
+    to: POST /api/passengers
+    relation: DEFINES
+  - from: POST /api/passengers
+    to: addPassenger
+    relation: CALLS
+  - from: REQ-3-2
+    to: getPassengers
+    relation: DEFINES
+  - from: REQ-3-2
+    to: searchPassengers
+    relation: DEFINES
+  - from: REQ-3-2
+    to: addPassenger
     relation: DEFINES

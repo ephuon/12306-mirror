@@ -95,3 +95,12 @@ SearchResultPage:
     - TicketQueryForm
     - TicketFilter
   downstream_ids: []
+PassengerList:
+  related_req_id: REQ-3-2
+  path: frontend/src/pages/center/PassengerList.jsx
+  description: Passenger list management component with search functionality
+  upstream_ids:
+    - getPassengers
+    - searchPassengers
+    - addPassenger
+  downstream_ids: []

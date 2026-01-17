@@ -49,3 +49,18 @@ GetTickets:
   signature: GET /tickets
   upstream_ids: []
   downstream_ids: []
+GET /api/passengers:
+  related_req_id: REQ-3-2
+  path: backend/src/routes/api.js
+  signature: GET /api/passengers?userId={userId}&q={query}
+  upstream_ids: []
+  downstream_ids:
+    - getPassengers
+    - searchPassengers
+POST /api/passengers:
+  related_req_id: REQ-3-2
+  path: backend/src/routes/api.js
+  signature: POST /api/passengers
+  upstream_ids: []
+  downstream_ids:
+    - addPassenger
