@@ -1,0 +1,9 @@
+func_loginUser:
+  related_req_id: REQ-1-2
+  path: backend/src/database/operations.js
+  signature: loginUser(credentials)
+  upstream_ids:
+    - api_login
+  db_tables:
+    - users
+    - login_attempts

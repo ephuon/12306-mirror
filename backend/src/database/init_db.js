@@ -10,13 +10,23 @@ const db = new sqlite3.Database(dbPath, (err) => {
     db.serialize(() => {
       db.run(`CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT,
+        username TEXT UNIQUE,
         password TEXT,
         id_type TEXT,
         id_card TEXT,
         real_name TEXT,
         phone TEXT,
+        email TEXT,
         type INTEGER
+      )`);
+
+      db.run(`CREATE TABLE IF NOT EXISTS login_attempts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
+        ip TEXT,
+        attempts INTEGER DEFAULT 0,
+        last_attempt_time DATETIME,
+        UNIQUE(username, ip)
       )`);
     });
   }

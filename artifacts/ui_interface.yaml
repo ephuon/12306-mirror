@@ -7,9 +7,10 @@ HomePage:
 ui_login_page:
   related_req_id: REQ-1
   path: frontend/src/pages/Login.jsx
-  description: 用户登录页面容器
+  description: User Login Page with username/password form
   upstream_ids: []
-  downstream_ids: []
+  downstream_ids:
+    - api_login
 ui_register_page:
   related_req_id: REQ-1
   path: frontend/src/pages/Register.jsx

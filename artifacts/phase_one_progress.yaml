@@ -10,11 +10,18 @@
       - ui_login_page
       - ui_register_page
 - id: REQ-1-1
-  status: unprocessed
+  status: processed
 - id: REQ-1-2
-  status: unprocessed
+  status: processed
+  artifacts:
+    ui_ids:
+      - ui_login_page
+    api_ids:
+      - api_login
+    func_ids:
+      - func_loginUser
 - id: REQ-1-3
-  status: unprocessed
+  status: processed
 - id: REQ-2
   status: unprocessed
 - id: REQ-2-1

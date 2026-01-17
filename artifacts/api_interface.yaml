@@ -1,0 +1,8 @@
+api_login:
+  related_req_id: REQ-1-2
+  path: backend/src/routes/api.js
+  signature: POST /api/login
+  upstream_ids:
+    - ui_login_page
+  downstream_ids:
+    - func_loginUser

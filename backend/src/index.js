@@ -10,8 +10,10 @@ app.use(bodyParser.json());
 
  
 require('./database/init_db');
+const apiRoutes = require('./routes/api');
 
- 
+app.use('/api', apiRoutes);
+
 app.get('/', (req, res) => {
   res.json({ code: 200, message: 'Backend Ready' });
 });
