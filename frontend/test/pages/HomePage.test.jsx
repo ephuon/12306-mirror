@@ -115,4 +115,29 @@ describe('Full-Stack Integration: <HomePage />', () => {
     // Verify input value
     expect(departureInput.value).toBe('北京南');
   });
+
+  it('interacts with StationSelector to choose arrival station', async () => {
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    // Find Arrival Input
+    const inputs = screen.getAllByPlaceholderText('简拼/全拼/汉字');
+    const arrivalInput = inputs[1]; // Assuming second is Arrival
+
+    fireEvent.focus(arrivalInput);
+
+    // Wait for popup and stations
+    await waitFor(() => {
+        expect(screen.getByText('北京南')).toBeInTheDocument();
+    });
+
+    // Click station
+    fireEvent.click(screen.getByText('北京南'));
+
+    // Verify input value
+    expect(arrivalInput.value).toBe('北京南');
+  });
 });

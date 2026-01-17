@@ -173,7 +173,7 @@ nodes:
   ui_station_selector:
     type: UI
     path: frontend/src/components/StationSelector.jsx
-    description: Station selection component with fuzzy search and popup list
+    description: Station selection component reused for destination input
 edges:
   - from: ROOT
     to: REQ-1
@@ -343,3 +343,6 @@ edges:
   - from: api_stations_search
     to: ui_station_selector
     relation: CALLS
+  - from: REQ-2-1-2
+    to: ui_station_selector
+    relation: DEFINES

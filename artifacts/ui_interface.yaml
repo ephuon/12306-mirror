@@ -40,7 +40,7 @@ ui_quick_search_panel:
 ui_station_selector:
   related_req_id: REQ-2-1-1
   path: frontend/src/components/StationSelector.jsx
-  description: Station selection component with fuzzy search and popup list
+  description: Station selection component reused for destination input
   upstream_ids:
     - api_stations_list
     - api_stations_search
