@@ -96,3 +96,10 @@ API_GET_ORDERS:
     - OrderList
   downstream_ids:
     - getOrders
+API_createOrder:
+  related_req_id: REQ-4-2
+  path: /Users/bladewaltz/Desktop/12306_rev/12306-mirror/backend/src/routes/api.js
+  signature: POST /api/orders
+  upstream_ids:
+    - FUNC_createOrder
+  downstream_ids: []

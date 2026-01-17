@@ -98,3 +98,11 @@ getOrders:
   db_tables:
     - orders
     - order_items
+FUNC_createOrder:
+  related_req_id: REQ-4-2
+  path: /Users/bladewaltz/Desktop/12306_rev/12306-mirror/backend/src/database/operations.js
+  signature: createOrder(userId, trainNumber, passengerIds, seatType)
+  upstream_ids: []
+  db_tables:
+    - orders
+    - order_items

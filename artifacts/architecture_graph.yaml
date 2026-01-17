@@ -292,6 +292,21 @@ nodes:
     type: API
     path: backend/src/routes/api.js
     signature: GET /api/orders
+  FUNC_createOrder:
+    type: FUNC
+    path: /Users/bladewaltz/Desktop/12306_rev/12306-mirror/backend/src/database/operations.js
+    signature: createOrder(userId, trainNumber, passengerIds, seatType)
+    db_tables:
+      - orders
+      - order_items
+  API_createOrder:
+    type: API
+    path: /Users/bladewaltz/Desktop/12306_rev/12306-mirror/backend/src/routes/api.js
+    signature: POST /api/orders
+  BookingPage:
+    type: UI
+    path: /Users/bladewaltz/Desktop/12306_rev/12306-mirror/frontend/src/pages/order/BookingPage.jsx
+    description: 订单填写页面，展示车次信息，选择乘车人，提交订单
 edges:
   - from: ROOT
     to: REQ-1
@@ -617,3 +632,18 @@ edges:
   - from: REQ-4-1
     to: API_GET_ORDERS
     relation: DEFINES
+  - from: REQ-4-2
+    to: FUNC_createOrder
+    relation: DEFINES
+  - from: REQ-4-2
+    to: API_createOrder
+    relation: DEFINES
+  - from: FUNC_createOrder
+    to: API_createOrder
+    relation: CALLS
+  - from: REQ-4-2
+    to: BookingPage
+    relation: DEFINES
+  - from: API_createOrder
+    to: BookingPage
+    relation: CALLS

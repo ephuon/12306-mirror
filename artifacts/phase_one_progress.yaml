@@ -137,7 +137,14 @@
     api_ids:
       - API_GET_ORDERS
 - id: REQ-4-2
-  status: unprocessed
+  status: processed
+  artifacts:
+    func_ids:
+      - FUNC_createOrder
+    api_ids:
+      - API_createOrder
+    ui_ids:
+      - BookingPage
 - id: REQ-4-3
   status: unprocessed
 - id: REQ-4-4

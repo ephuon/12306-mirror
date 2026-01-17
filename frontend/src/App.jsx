@@ -8,6 +8,7 @@ import UserCenterPage from './pages/UserCenterPage';
 import PersonalInfo from './pages/center/PersonalInfo';
 import PassengerList from './pages/center/PassengerList';
 import OrderList from './pages/center/OrderList';
+import BookingPage from './pages/order/BookingPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/search" element={<SearchResultPage />} />
+      <Route path="/booking" element={<BookingPage />} />
       <Route path="/center" element={<UserCenterPage />}>
         <Route index element={<PersonalInfo />} />
         <Route path="personal" element={<PersonalInfo />} />

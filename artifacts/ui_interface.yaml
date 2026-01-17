@@ -117,3 +117,10 @@ OrderList:
     - UserCenterPage
   downstream_ids:
     - API_GET_ORDERS
+BookingPage:
+  related_req_id: REQ-4-2
+  path: /Users/bladewaltz/Desktop/12306_rev/12306-mirror/frontend/src/pages/order/BookingPage.jsx
+  description: 订单填写页面，展示车次信息，选择乘车人，提交订单
+  upstream_ids:
+    - API_createOrder
+  downstream_ids: []

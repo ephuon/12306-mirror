@@ -296,4 +296,31 @@ router.post('/forgot-password/reset', async (req, res) => {
             }
         });
 
+        router.post('/orders', async (req, res) => {
+    // In a real app, we would verify the token from Authorization header.
+    // For this mock implementation, we expect userId in the body (as verified by tests and other endpoints).
+    
+    const { userId, trainNumber, passengerIds, seatType } = req.body;
+
+    if (!userId) {
+        return res.status(401).json({ success: false, message: 'Unauthorized: Missing userId' });
+    }
+
+    if (!trainNumber || !passengerIds || !Array.isArray(passengerIds) || passengerIds.length === 0 || !seatType) {
+        return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+
+    try {
+        const orderId = await operations.createOrder(userId, trainNumber, passengerIds, seatType);
+        res.json({ success: true, orderId });
+    } catch (err) {
+        console.error("Create Order Error:", err);
+        if (err.message.includes('belong to user')) {
+            res.status(403).json({ success: false, message: err.message });
+        } else {
+            res.status(500).json({ success: false, message: err.message });
+        }
+    }
+});
+
         module.exports = router;

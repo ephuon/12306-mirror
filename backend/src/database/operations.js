@@ -224,6 +224,63 @@ const getOrders = (userId, statusGroup) => {
     });
 };
 
+const createOrder = (userId, trainNumber, passengerIds, seatType) => {
+    return new Promise((resolve, reject) => {
+        // 1. Verify passengers belong to user
+        const sqlPassengers = "SELECT * FROM passengers WHERE user_id = ?";
+        db.all(sqlPassengers, [userId], (err, passengers) => {
+            if (err) return reject(err);
+            
+            const userPassengerMap = new Map(passengers.map(p => [p.id, p]));
+            const selectedPassengers = [];
+            
+            for (const pid of passengerIds) {
+                if (!userPassengerMap.has(pid)) {
+                    return reject(new Error(`Passenger ID ${pid} does not belong to user`));
+                }
+                selectedPassengers.push(userPassengerMap.get(pid));
+            }
+
+            if (selectedPassengers.length === 0) {
+                return reject(new Error("No passengers selected"));
+            }
+
+            // 2. Mock Price Calculation
+            const basePrice = 100; // Mock price
+            const totalAmount = basePrice * selectedPassengers.length;
+            
+            // 3. Insert Order
+            const sqlOrder = `INSERT INTO orders (user_id, train_number, status, total_amount, created_at) VALUES (?, ?, 'pending', ?, datetime('now'))`;
+            
+            db.run(sqlOrder, [userId, trainNumber, totalAmount], function(err) {
+                if (err) return reject(err);
+                const orderId = this.lastID;
+                
+                // 4. Insert Order Items
+                const stmt = db.prepare(`INSERT INTO order_items (order_id, passenger_id, passenger_name, passenger_id_no, seat_type, price) VALUES (?, ?, ?, ?, ?, ?)`);
+                
+                let completed = 0;
+                let hasError = false;
+
+                selectedPassengers.forEach(p => {
+                    stmt.run(orderId, p.id, p.name, p.id_no, seatType, basePrice, (err) => {
+                        if (hasError) return;
+                        if (err) {
+                            hasError = true;
+                            return reject(err);
+                        }
+                        completed++;
+                        if (completed === selectedPassengers.length) {
+                            stmt.finalize();
+                            resolve(orderId);
+                        }
+                    });
+                });
+            });
+        });
+    });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -238,5 +295,6 @@ module.exports = {
   addPassenger,
   deletePassenger,
   updatePassenger,
-  getOrders
+  getOrders,
+  createOrder
 };
