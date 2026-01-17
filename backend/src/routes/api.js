@@ -348,4 +348,27 @@ router.put('/orders/:id/cancel', async (req, res) => {
     }
 });
 
+router.post('/orders/:id/pay', async (req, res) => {
+    const userId = req.body.userId;
+    const orderId = req.params.id;
+
+    if (!userId) {
+        return res.status(401).json({ success: false, message: 'Unauthorized: Missing userId' });
+    }
+
+    try {
+        await operations.payOrder(userId, orderId);
+        res.json({ success: true });
+    } catch (err) {
+        console.error("Pay Order Error:", err);
+        if (err.message.includes('not in pending status')) {
+            res.status(400).json({ success: false, message: err.message });
+        } else if (err.message.includes('not found') || err.message.includes('belong to user')) {
+            res.status(404).json({ success: false, message: err.message });
+        } else {
+            res.status(500).json({ success: false, message: err.message });
+        }
+    }
+});
+
 module.exports = router;

@@ -125,3 +125,11 @@ BookingPage:
   upstream_ids:
     - API_createOrder
   downstream_ids: []
+Page_Payment:
+  related_req_id: REQ-4-4
+  path: frontend/src/pages/order/PaymentPage.jsx
+  description: Order payment page with order details and pay action
+  upstream_ids:
+    - API_PayOrder
+    - API_GetOrders
+  downstream_ids: []

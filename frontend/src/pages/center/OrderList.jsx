@@ -1,9 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './OrderList.css';
 
 const OrderList = () => {
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('upcoming'); // upcoming (未出行), history (历史订单)
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -103,7 +105,7 @@ const OrderList = () => {
                                 </span>
                                 {order.status === 'pending' && (
                                     <>
-                                        <button className="btn-pay">去支付</button>
+                                        <button className="btn-pay" onClick={() => navigate(`/payment/${order.id}`, { state: { order } })}>去支付</button>
                                         <button className="btn-cancel" onClick={() => handleCancel(order.id)}>取消订单</button>
                                     </>
                                 )}

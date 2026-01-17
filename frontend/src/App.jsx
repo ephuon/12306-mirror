@@ -9,6 +9,7 @@ import PersonalInfo from './pages/center/PersonalInfo';
 import PassengerList from './pages/center/PassengerList';
 import OrderList from './pages/center/OrderList';
 import BookingPage from './pages/order/BookingPage';
+import PaymentPage from './pages/order/PaymentPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/search" element={<SearchResultPage />} />
       <Route path="/booking" element={<BookingPage />} />
+      <Route path="/payment/:orderId" element={<PaymentPage />} />
       <Route path="/center" element={<UserCenterPage />}>
         <Route index element={<PersonalInfo />} />
         <Route path="personal" element={<PersonalInfo />} />

@@ -92,6 +92,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
         status TEXT CHECK(status IN ('pending', 'paid', 'cancelled', 'completed')),
         total_amount REAL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        paid_at DATETIME,
         cancelled_at DATETIME,
         FOREIGN KEY(user_id) REFERENCES users(id)
       )`);

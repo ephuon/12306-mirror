@@ -325,6 +325,30 @@ const cancelOrder = (userId, orderId) => {
     });
 };
 
+const payOrder = (userId, orderId) => {
+    return new Promise((resolve, reject) => {
+        orderId = Number(orderId);
+        
+        db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, order) => {
+            if (err) return reject(err);
+            if (!order) return reject(new Error(`Order ${orderId} not found`));
+            
+            if (order.user_id !== userId) {
+                return reject(new Error(`Order user_id ${order.user_id} does not match request user_id ${userId}`));
+            }
+            
+            if (order.status !== 'pending') {
+                return reject(new Error('Order is not in pending status'));
+            }
+            
+            db.run("UPDATE orders SET status = 'paid', paid_at = datetime('now') WHERE id = ?", [orderId], function(err) {
+                if (err) return reject(err);
+                resolve(true);
+            });
+        });
+    });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -341,5 +365,6 @@ module.exports = {
   updatePassenger,
   getOrders,
   createOrder,
-  cancelOrder
+  cancelOrder,
+  payOrder
 };

@@ -114,3 +114,10 @@ Func_CancelOrder:
     - API_CancelOrder
   db_tables:
     - orders
+Func_PayOrder:
+  related_req_id: REQ-4-4
+  path: backend/src/database/operations.js
+  signature: payOrder(userId, orderId)
+  upstream_ids: []
+  db_tables:
+    - orders

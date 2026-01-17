@@ -155,4 +155,11 @@
     func_ids:
       - Func_CancelOrder
 - id: REQ-4-4
-  status: unprocessed
+  status: processed
+  artifacts:
+    ui_ids:
+      - Page_Payment
+    api_ids:
+      - API_PayOrder
+    func_ids:
+      - Func_PayOrder
