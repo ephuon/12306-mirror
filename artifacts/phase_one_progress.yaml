@@ -39,7 +39,14 @@
     ui_ids:
       - ui_quick_search_panel
 - id: REQ-2-1-1
-  status: unprocessed
+  status: processed
+  artifacts:
+    api_ids:
+      - api_stations_list
+      - api_stations_search
+    func_ids:
+      - func_get_all_stations
+      - func_search_stations
 - id: REQ-2-1-2
   status: unprocessed
 - id: REQ-2-1-3

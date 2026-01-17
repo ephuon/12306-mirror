@@ -23,3 +23,17 @@ func_updatePassword:
     - api_forgot_password_reset
   db_tables:
     - users
+func_get_all_stations:
+  related_req_id: REQ-2-1-1
+  path: backend/src/database/operations.js
+  signature: getAllStations()
+  upstream_ids: []
+  db_tables:
+    - stations
+func_search_stations:
+  related_req_id: REQ-2-1-1
+  path: backend/src/database/operations.js
+  signature: searchStations(query)
+  upstream_ids: []
+  db_tables:
+    - stations

@@ -101,11 +101,33 @@ const updatePassword = (username, newPassword) => {
     });
 };
 
+const getAllStations = () => {
+  return new Promise((resolve, reject) => {
+    db.all('SELECT * FROM stations', (err, rows) => {
+      if (err) reject(err);
+      else resolve(rows);
+    });
+  });
+};
+
+const searchStations = (query) => {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT * FROM stations WHERE name LIKE ? OR code LIKE ? OR city_name LIKE ? OR pinyin LIKE ? OR initial LIKE ?`;
+    const param = `%${query}%`;
+    db.all(sql, [param, param, param, param, param], (err, rows) => {
+      if (err) reject(err);
+      else resolve(rows);
+    });
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
   verifyUserIdentity,
   storeVerificationCode,
   verifyCode,
-  updatePassword
+  updatePassword,
+  getAllStations,
+  searchStations
 };

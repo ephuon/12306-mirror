@@ -43,6 +43,9 @@ const db = new sqlite3.Database(dbPath, (err) => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT UNIQUE,
         code TEXT UNIQUE,
+        pinyin TEXT,
+        initial TEXT,
+        city_code TEXT,
         city_name TEXT
       )`);
 
@@ -67,11 +70,11 @@ const db = new sqlite3.Database(dbPath, (err) => {
       // Seed Data
       db.get("SELECT count(*) as count FROM stations", (err, row) => {
           if (!err && row && row.count === 0) {
-              const stmt = db.prepare("INSERT INTO stations (name, code, city_name) VALUES (?, ?, ?)");
-              stmt.run('北京南', 'BJP', '北京');
-              stmt.run('上海虹桥', 'SHH', '上海');
-              stmt.run('南京南', 'NKH', '南京');
-              stmt.run('杭州东', 'HGH', '杭州');
+              const stmt = db.prepare("INSERT INTO stations (name, code, pinyin, initial, city_code, city_name) VALUES (?, ?, ?, ?, ?, ?)");
+              stmt.run('北京南', 'BJP', 'beijingnan', 'bjn', '010', '北京');
+              stmt.run('上海虹桥', 'SHH', 'shanghaihongqiao', 'shhq', '021', '上海');
+              stmt.run('南京南', 'NKH', 'nanjingnan', 'njn', '025', '南京');
+              stmt.run('杭州东', 'HGH', 'hangzhoudong', 'hzd', '0571', '杭州');
               stmt.finalize();
           }
       });

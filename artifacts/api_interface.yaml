@@ -22,3 +22,17 @@ api_forgot_password_reset:
     - ui_forgot_password_page
   downstream_ids:
     - func_updatePassword
+api_stations_list:
+  related_req_id: REQ-2-1-1
+  path: backend/src/routes/api.js
+  signature: GET /api/stations
+  upstream_ids:
+    - func_get_all_stations
+  downstream_ids: []
+api_stations_search:
+  related_req_id: REQ-2-1-1
+  path: backend/src/routes/api.js
+  signature: GET /api/stations/search?q={query}
+  upstream_ids:
+    - func_search_stations
+  downstream_ids: []

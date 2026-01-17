@@ -150,6 +150,26 @@ nodes:
     type: UI
     path: frontend/src/components/QuickSearchPanel.jsx
     description: Quick Search Panel Component
+  api_stations_list:
+    type: API
+    path: backend/src/routes/api.js
+    signature: GET /api/stations
+  api_stations_search:
+    type: API
+    path: backend/src/routes/api.js
+    signature: GET /api/stations/search?q={query}
+  func_get_all_stations:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: getAllStations()
+    db_tables:
+      - stations
+  func_search_stations:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: searchStations(query)
+    db_tables:
+      - stations
 edges:
   - from: ROOT
     to: REQ-1
@@ -292,3 +312,21 @@ edges:
   - from: ui_quick_search_panel
     to: api_query_ticket
     relation: CALLS
+  - from: REQ-2-1-1
+    to: api_stations_list
+    relation: DEFINES
+  - from: func_get_all_stations
+    to: api_stations_list
+    relation: CALLS
+  - from: REQ-2-1-1
+    to: api_stations_search
+    relation: DEFINES
+  - from: func_search_stations
+    to: api_stations_search
+    relation: CALLS
+  - from: REQ-2-1-1
+    to: func_get_all_stations
+    relation: DEFINES
+  - from: REQ-2-1-1
+    to: func_search_stations
+    relation: DEFINES

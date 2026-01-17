@@ -120,8 +120,28 @@ router.post('/forgot-password/reset', async (req, res) => {
         await operations.updatePassword(username, newPassword);
         res.status(200).json({ success: true });
     } catch (err) {
-        res.status(400).json({ success: false, message: err.message });
+      res.status(400).json({ success: false, message: err.message });
     }
-});
+  });
+
+  // Station APIs
+  router.get('/stations', async (req, res) => {
+    try {
+      const stations = await operations.getAllStations();
+      res.json({ success: true, data: stations });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
+  });
+
+  router.get('/stations/search', async (req, res) => {
+    try {
+      const { q } = req.query;
+      const stations = await operations.searchStations(q || '');
+      res.json({ success: true, data: stations });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
+  });
 
 module.exports = router;
