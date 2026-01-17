@@ -213,7 +213,7 @@ nodes:
   PassengerList:
     type: UI
     path: frontend/src/pages/center/PassengerList.jsx
-    description: Passenger management list with add/delete capabilities
+    description: Passenger List with Delete Modal
   GET /api/passengers:
     type: API
     path: backend/src/routes/api.js
@@ -248,6 +248,16 @@ nodes:
     type: FUNC
     path: backend/src/database/operations.js
     signature: addPassenger(passengerData)
+    db_tables:
+      - passengers
+  DELETE /api/passengers/:id:
+    type: API
+    path: backend/src/routes/api.js
+    signature: DELETE /api/passengers/:id
+  deletePassenger:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: deletePassenger(id, userId)
     db_tables:
       - passengers
 edges:
@@ -520,4 +530,19 @@ edges:
     relation: CALLS
   - from: REQ-3-2
     to: FUNC_ADD_PASSENGER
+    relation: DEFINES
+  - from: REQ-3-2-2
+    to: PassengerList
+    relation: DEFINES
+  - from: PassengerList
+    to: DELETE /api/passengers/:id
+    relation: CALLS
+  - from: REQ-3-2-2
+    to: DELETE /api/passengers/:id
+    relation: DEFINES
+  - from: DELETE /api/passengers/:id
+    to: deletePassenger
+    relation: CALLS
+  - from: REQ-3-2-2
+    to: deletePassenger
     relation: DEFINES

@@ -105,7 +105,14 @@
 - id: REQ-3-2-1
   status: processed
 - id: REQ-3-2-2
-  status: unprocessed
+  status: processed
+  artifacts:
+    ui_ids:
+      - PassengerList
+    api_ids:
+      - DELETE /api/passengers/:id
+    func_ids:
+      - deletePassenger
 - id: REQ-3-2-3
   status: unprocessed
 - id: REQ-4

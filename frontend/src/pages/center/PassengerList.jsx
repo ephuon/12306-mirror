@@ -19,6 +19,10 @@ const PassengerList = () => {
         type: '成人'
     });
 
+    // Delete Modal State
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [passengerToDelete, setPassengerToDelete] = useState(null);
+
     const fetchPassengers = async (query = '') => {
         setLoading(true);
         try {
@@ -80,6 +84,35 @@ const PassengerList = () => {
         }
     };
 
+    const handleDeleteClick = (passenger) => {
+        setPassengerToDelete(passenger);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!passengerToDelete) return;
+        try {
+            const userStr = localStorage.getItem('user');
+            if (!userStr) return;
+            const user = JSON.parse(userStr);
+            
+            const res = await axios.delete(`/api/passengers/${passengerToDelete.id}`, {
+                params: { userId: user.id }
+            });
+            
+            if (res.data.success) {
+                setShowDeleteModal(false);
+                setPassengerToDelete(null);
+                fetchPassengers();
+            } else {
+                alert(res.data.message || '删除失败');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('删除失败：' + err.message);
+        }
+    };
+
     if (loading) return <div>加载中...</div>;
     if (error) return <div className="error">{error}</div>;
 
@@ -125,7 +158,7 @@ const PassengerList = () => {
                                 <td>{p.type}</td>
                                 <td>
                                     <button className="btn-link">编辑</button>
-                                    <button className="btn-link text-danger">删除</button>
+                                    <button className="btn-link text-danger" onClick={() => handleDeleteClick(p)}>删除</button>
                                 </td>
                             </tr>
                         ))
@@ -196,6 +229,26 @@ const PassengerList = () => {
                         <div className="modal-footer">
                             <button className="btn-cancel" onClick={() => setShowAddModal(false)}>取消</button>
                             <button className="btn-save" onClick={handleSavePassenger}>保存</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h3>确认删除</h3>
+                            <button className="close-btn" onClick={() => setShowDeleteModal(false)}>×</button>
+                        </div>
+                        <div className="modal-body">
+                            <p>确定要删除该乘车人吗？</p>
+                            {passengerToDelete && <p className="text-highlight">{passengerToDelete.name}</p>}
+                        </div>
+                        <div className="modal-footer">
+                            <button className="btn-cancel" onClick={() => setShowDeleteModal(false)}>取消</button>
+                            <button className="btn-save btn-danger" onClick={handleConfirmDelete}>确定</button>
                         </div>
                     </div>
                 </div>

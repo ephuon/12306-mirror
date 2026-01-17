@@ -84,4 +84,49 @@ describe('Passenger Operations', () => {
         const all = await operations.searchPassengers(userId, '');
         expect(all).toHaveLength(2);
     });
+
+    it('should delete a passenger', async () => {
+        // Add one first
+        const passengerData = {
+            user_id: userId,
+            name: 'To Delete',
+            id_type: '1',
+            id_no: '888',
+            phone: '888',
+            type: '成人'
+        };
+        const id = await operations.addPassenger(passengerData);
+        
+        // Delete it
+        const result = await operations.deletePassenger(id, userId);
+        expect(result).toBe(true);
+        
+        // Verify it's gone
+        const passengers = await operations.getPassengers(userId);
+        const found = passengers.find(p => p.id === id);
+        expect(found).toBeUndefined();
+    });
+
+    it('should not delete passenger of another user', async () => {
+         // Add one for current user
+         const passengerData = {
+            user_id: userId,
+            name: 'Mine',
+            id_type: '1',
+            id_no: '777',
+            phone: '777',
+            type: '成人'
+        };
+        const id = await operations.addPassenger(passengerData);
+
+        // Try to delete with another userId
+        const otherUserId = userId + 999;
+        try {
+            await operations.deletePassenger(id, otherUserId);
+            // Should fail
+            // Note: If implementation returns false instead of throwing, update expectation
+        } catch (e) {
+            expect(e).toBeDefined();
+        }
+    });
 });

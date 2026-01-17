@@ -93,4 +93,28 @@ describe('Passenger API', () => {
         expect(res.body.data).toHaveLength(1);
         expect(res.body.data[0].name).toBe('API Passenger');
     });
+
+    it('DELETE /api/passengers/:id should delete passenger', async () => {
+        // 1. Add passenger
+        const passenger = {
+            userId: userId,
+            name: 'Delete Me',
+            id_type: '1',
+            id_no: '000',
+            phone: '000',
+            type: '成人'
+        };
+        const createRes = await request(app).post('/api/passengers').send(passenger);
+        const passengerId = createRes.body.data.id;
+
+        // 2. Delete it
+        const delRes = await request(app).delete(`/api/passengers/${passengerId}?userId=${userId}`);
+        expect(delRes.status).toBe(200);
+        expect(delRes.body.success).toBe(true);
+
+        // 3. Verify gone
+        const listRes = await request(app).get(`/api/passengers?userId=${userId}`);
+        const found = listRes.body.data.find(p => p.id === passengerId);
+        expect(found).toBeUndefined();
+    });
 });

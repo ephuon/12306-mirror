@@ -66,3 +66,11 @@ FUNC_ADD_PASSENGER:
     - API_POST_PASSENGERS
   db_tables:
     - passengers
+deletePassenger:
+  related_req_id: REQ-3-2-2
+  path: backend/src/database/operations.js
+  signature: deletePassenger(id, userId)
+  upstream_ids:
+    - DELETE /api/passengers/:id
+  db_tables:
+    - passengers

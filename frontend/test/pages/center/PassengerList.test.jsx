@@ -7,7 +7,7 @@ import React from 'react';
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
-import PassengerList from '../../pages/center/PassengerList';
+import PassengerList from '../../../src/pages/center/PassengerList';
 import app from '../../../../backend/src/index'; 
 import db from '../../../../backend/src/database/init_db'; 
 import operations from '../../../../backend/src/database/operations';

@@ -72,3 +72,11 @@ API_POST_PASSENGERS:
     - PassengerList
   downstream_ids:
     - FUNC_ADD_PASSENGER
+DELETE /api/passengers/:id:
+  related_req_id: REQ-3-2-2
+  path: backend/src/routes/api.js
+  signature: DELETE /api/passengers/:id
+  upstream_ids:
+    - PassengerList
+  downstream_ids:
+    - deletePassenger

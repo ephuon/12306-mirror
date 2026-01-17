@@ -239,10 +239,28 @@ router.post('/forgot-password/reset', async (req, res) => {
           }
           const passengerData = { user_id: userId, name, id_type, id_no, phone, type };
           const id = await operations.addPassenger(passengerData);
-          res.status(201).json({ success: true, data: { id } });
-      } catch (err) {
-          res.status(500).json({ success: false, message: err.message });
-      }
-  });
+                res.status(201).json({ success: true, data: { id } });
+            } catch (err) {
+                res.status(500).json({ success: false, message: err.message });
+            }
+        });
 
-module.exports = router;
+        router.delete('/passengers/:id', async (req, res) => {
+            try {
+                const { id } = req.params;
+                const { userId } = req.query; 
+                
+                if (!userId) return res.status(400).json({success: false, message: 'Missing userId'});
+                
+                await operations.deletePassenger(id, userId);
+                res.status(200).json({ success: true });
+            } catch (err) {
+                if (err.message.includes('not found') || err.message.includes('permission denied')) {
+                     res.status(404).json({ success: false, message: err.message });
+                } else {
+                     res.status(500).json({ success: false, message: err.message });
+                }
+            }
+        });
+
+        module.exports = router;

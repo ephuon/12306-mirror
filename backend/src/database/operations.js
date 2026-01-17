@@ -152,6 +152,21 @@ const addPassenger = (passengerData) => {
     });
 };
 
+const deletePassenger = (id, userId) => {
+    return new Promise((resolve, reject) => {
+        // First check if it belongs to user
+        db.get('SELECT id FROM passengers WHERE id = ? AND user_id = ?', [id, userId], (err, row) => {
+            if (err) return reject(err);
+            if (!row) return reject(new Error('Passenger not found or permission denied'));
+             
+            db.run('DELETE FROM passengers WHERE id = ?', [id], function(err) {
+                if (err) return reject(err);
+                resolve(true);
+            });
+        });
+    });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -163,5 +178,6 @@ module.exports = {
   searchStations,
   getPassengers,
   searchPassengers,
-  addPassenger
+  addPassenger,
+  deletePassenger
 };
