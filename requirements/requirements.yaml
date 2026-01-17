@@ -1,0 +1,936 @@
+id: ROOT
+name: 12306购票系统
+description: 基于Web的铁路购票系统，包含用户认证、车票查询、预订、订单管理及个人中心等核心功能，首页参考图片：[image](./reference/index.png)。logo资源位于项目根目录的assets/logo.png，在合适的位置引用图片链接。
+dependencies: []
+scenarios: 
+  - id: ROOT:SCE-0
+    name: 进入首页
+    prerequisites:
+    steps:
+      - action: 默认打开首页
+        expectation: 初始化项目脚手架；页面加载完成，显示首页布局。
+children:
+  - id: REQ-1
+    name: 用户认证模块
+    description: 系统的基础设施，提供用户身份识别与管理能力。
+    dependencies: []
+    scenarios:
+      - id: REQ-1:SCE-0
+        name: 认证模块基础设施初始化
+        prerequisites:
+          - ROOT:SCE-0
+        steps:
+          - action: 初始化认证模块数据库和路由
+            expectation: 在数据库创建 `users` 表（包含id, username, password, id_type, id_card, real_name, phone, type等字段）；前端首页右上角生成”登录“、”注册“入口，分别对应 /login 和 /register 路由及空页面容器。
+    children:
+      - id: REQ-1-1
+        name: 用户注册
+        description: 新用户创建账户，并初始化必要的关联数据。注册表单参考图片：[image](./reference/auth/register.png)
+        dependencies: []
+        scenarios:
+          - id: REQ-1-1:SCE-0
+            name: 进入注册页
+            prerequisites:
+              - ROOT:SCE-0 (位于首页)
+            steps:
+              - action: 点击首页右上角的“注册”
+                expectation: 进入注册表单页
+          - id: REQ-1-1:SCE-1
+            name: 成功注册新用户
+            prerequisites:
+              - REQ-1-1:SCE-0 (已在注册页)
+            steps:
+              - action: 输入用户名、密码及确认密码
+                expectation: 输入框内容可见，密码掩码显示。
+              - action: 选择证件类型并输入姓名、证件号码
+                expectation: 字段完成填写。
+              - action: 选择优惠（待）类型（成人/儿童/学生/残疾军人）
+                expectation: 下拉框选中对应类型。
+              - action: 输入邮箱（可选）、选择手机区号并输入手机号码
+                expectation: 邮箱与手机号格式校验通过，对应字段完成填写。
+              - action: 勾选“我已阅读并同意《用户注册协议》”
+                expectation: 复选框被选中。
+              - action: 点击“下一步”按钮
+                expectation: 调用注册接口，后端验证通过，数据库插入用户记录，显示“注册成功”提示，随后跳转至登录页。
+          - id: REQ-1-1:SCE-2
+            name: 用户名格式验证失败
+            prerequisites:
+              - REQ-1-1:SCE-0 (已在注册页)
+            steps:
+              - action: 输入不符合规则的用户名（如"123abc"数字开头）
+                expectation: 用户名输入框显示红色边框，显示错误提示"用户名必须以字母开头"。
+          - id: REQ-1-1:SCE-3
+            name: 用户名格式验证通过
+            prerequisites:
+              - REQ-1-1:SCE-0 (已在注册页)
+            steps:
+              - action: 输入符合规则的用户名（如"abc123"，6-30位，字母开头）
+                expectation: 用户名输入框显示正常边框，不显示错误提示。
+          - id: REQ-1-1:SCE-4
+            name: 密码强度提示
+            prerequisites:
+              - REQ-1-1:SCE-0 (已在注册页)
+            steps:
+              - action: 输入弱密码（如"123456"）
+                expectation: 显示密码强度"弱"，密码强度条显示红色。
+              - action: 输入强密码（如"Abc123!@#"）
+                expectation: 显示密码强度"强"，密码强度条显示绿色。
+          - id: REQ-1-1:SCE-5
+            name: 确认密码验证失败
+            prerequisites:
+              - REQ-1-1:SCE-0 (已在注册页)
+            steps:
+              - action: 输入密码"Password123!"
+                expectation: 密码框显示已输入内容（掩码）。
+              - action: 输入不一致的确认密码"Password456!"
+                expectation: 确认密码输入框显示红色边框，显示错误提示"两次输入的密码不一致"。
+          - id: REQ-1-1:SCE-6
+            name: 手机号格式验证
+            prerequisites:
+              - REQ-1-1:SCE-0 (已在注册页)
+            steps:
+              - action: 输入错误格式手机号（如"12345"）
+                expectation: 手机号输入框显示红色边框，显示错误提示"请输入正确的手机号码"。
+              - action: 输入正确格式手机号（如"13800138000"）
+                expectation: 手机号输入框显示正常边框，不显示错误提示。
+          - id: REQ-1-1:SCE-7
+            name: 证件类型选择
+            prerequisites:
+              - REQ-1-1:SCE-0 (已在注册页)
+            steps:
+              - action: 点击证件类型下拉框
+                expectation: 显示证件类型列表，包含"居民身份证"、"护照"、"港澳居民来往内地通行证"、"台湾居民来往大陆通行证"等选项。
+          - id: REQ-1-1:SCE-8
+            name: 服务条款未勾选提交失败
+            prerequisites:
+              - REQ-1-1:SCE-0 (已在注册页)
+            steps:
+              - action: 填写所有必填信息但不勾选服务条款
+                expectation: 表单填写完成。
+              - action: 点击"下一步"按钮
+                expectation: 页面不跳转，显示提示"请先阅读并同意服务条款"，服务条款复选框高亮提示。
+          - id: REQ-1-1:SCE-9
+            name: 用户名已存在注册失败
+            prerequisites:
+              - REQ-1-1:SCE-0 (已在注册页)
+              - REQ-1-1:SCE-1 (用户名"existing_user"已被注册)
+            steps:
+              - action: 输入已存在的用户名"existing_user"
+                expectation: 用户名输入框显示输入内容。
+              - action: 填写其他所有必填信息并勾选服务条款
+                expectation: 表单填写完成。
+              - action: 点击"下一步"按钮
+                expectation: 页面不跳转，显示错误提示"用户名已被使用，请更换用户名"，用户名输入框标红。
+          - id: REQ-1-1:SCE-10
+            name: 身份信息核验失败
+            prerequisites:
+              - REQ-1-1:SCE-0 (已在注册页)
+            steps:
+              - action: 输入不匹配的姓名和证件号码
+                expectation: 表单字段显示输入值。
+              - action: 填写其他所有必填信息并勾选服务条款
+                expectation: 表单填写完成。
+              - action: 点击"下一步"按钮
+                expectation: 系统调用公安部核验接口，核验失败，显示错误提示"身份信息验证失败，请检查姓名和证件号码是否正确"，返回注册页面。
+          - id: REQ-1-1:SCE-11
+            name: 手机号注册数量达到上限
+            prerequisites:
+              - REQ-1-1:SCE-0 (已在注册页)
+            steps:
+              - action: 输入已注册5个账号的手机号"13800138000"
+                expectation: 手机号输入框显示输入内容。
+              - action: 填写其他所有必填信息并勾选服务条款
+                expectation: 表单填写完成。
+              - action: 点击"下一步"按钮
+                expectation: 显示错误提示"该手机号已注册5个账号，无法继续注册"，提供客服联系方式。
+      - id: REQ-1-2
+        name: 用户登录
+        description: 验证用户身份并建立会话。登录表单参考图片：[image](./reference/auth/login.png)
+        dependencies:
+          - REQ-1-1
+        scenarios:
+          - id: REQ-1-2:SCE-0
+            name: 进入登录页
+            prerequisites:
+              - ROOT:SCE-0 (位于首页)
+            steps:
+              - action: 点击首页右上角的“登录”
+                expectation: 进入登录表单页
+          - id: REQ-1-2:SCE-1
+            name: 账号密码登录成功
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+              - REQ-1-1:SCE-1 (用户已注册)
+            steps:
+              - action: 确保“账号登录”标签处于激活状态
+                expectation: 显示用户名和密码输入框。
+              - action: 输入用户名/邮箱/手机号
+                expectation: 输入框显示已输入内容。
+              - action: 输入密码（可点击“显示/隐藏”切换可见性）
+                expectation: 密码输入框显示掩码。
+              - action: 点击“立即登录”按钮
+                expectation: 调用登录接口，系统验证通过，后端返回登录成功响应，建立Session，跳转到首页。
+          - id: REQ-1-2:SCE-2
+            name: 使用手机号登录成功
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+              - REQ-1-1:SCE-1 (用户已注册，手机号"13800138000")
+            steps:
+              - action: 输入手机号"13800138000"
+                expectation: 用户名输入框显示手机号。
+              - action: 输入正确密码
+                expectation: 密码输入框显示掩码。
+              - action: 点击"立即登录"按钮
+                expectation: 系统验证通过，建立Session，跳转到首页。
+          - id: REQ-1-2:SCE-3
+            name: 使用邮箱登录成功
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+              - REQ-1-1:SCE-1 (用户已注册，邮箱"test@example.com")
+            steps:
+              - action: 输入邮箱"test@example.com"
+                expectation: 用户名输入框显示邮箱。
+              - action: 输入正确密码
+                expectation: 密码输入框显示掩码。
+              - action: 点击"立即登录"按钮
+                expectation: 系统验证通过，建立Session，跳转到首页。
+          - id: REQ-1-2:SCE-4
+            name: 用户名不存在登录失败
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+            steps:
+              - action: 输入不存在的用户名"nonexistent_user"
+                expectation: 用户名输入框显示输入内容。
+              - action: 输入任意密码
+                expectation: 密码输入框显示掩码。
+              - action: 点击"立即登录"按钮
+                expectation: 系统验证失败，显示错误提示"用户名或密码错误"，页面不跳转，清空密码输入框。
+          - id: REQ-1-2:SCE-5
+            name: 密码错误登录失败
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+              - REQ-1-1:SCE-1 (用户"test_user"已注册，正确密码"Password123!")
+            steps:
+              - action: 输入用户名"test_user"
+                expectation: 用户名输入框显示输入内容。
+              - action: 输入错误密码"WrongPassword"
+                expectation: 密码输入框显示掩码。
+              - action: 点击"立即登录"按钮
+                expectation: 系统验证失败，显示错误提示"用户名或密码错误"，页面不跳转。
+          - id: REQ-1-2:SCE-6
+            name: 密码错误3次需要验证码
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+              - REQ-1-1:SCE-1 (用户已注册)
+            steps:
+              - action: 连续3次输入错误密码并点击"立即登录"
+                expectation: 第3次失败后，显示图形验证码输入框，显示提示"密码错误次数过多，请输入验证码"。
+          - id: REQ-1-2:SCE-7
+            name: 密码错误5次账号锁定
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+              - REQ-1-1:SCE-1 (用户已注册)
+            steps:
+              - action: 连续5次输入错误密码并点击"立即登录"
+                expectation: 第5次失败后，显示错误提示"密码错误次数过多，账号已锁定30分钟"，显示解锁倒计时，"立即登录"按钮变为灰色不可点击，显示"忘记密码？"链接。
+          - id: REQ-1-2:SCE-8
+            name: 用户名为空验证失败
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+            steps:
+              - action: 不输入用户名，仅输入密码
+                expectation: 密码输入框显示掩码。
+              - action: 点击"立即登录"按钮
+                expectation: 用户名输入框显示红色边框，显示提示"请输入用户名"，页面不跳转。
+          - id: REQ-1-2:SCE-9
+            name: 密码为空验证失败
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+            steps:
+              - action: 输入用户名，不输入密码
+                expectation: 用户名输入框显示输入内容。
+              - action: 点击"立即登录"按钮
+                expectation: 密码输入框显示红色边框，显示提示"请输入密码"，页面不跳转。
+          - id: REQ-1-2:SCE-10
+            name: 回车键登录
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+              - REQ-1-1:SCE-1 (用户已注册)
+            steps:
+              - action: 输入正确的用户名和密码
+                expectation: 输入框显示对应内容。
+              - action: 按下回车键
+                expectation: 触发"立即登录"按钮点击事件，提交登录请求，验证通过后跳转到首页。
+          - id: REQ-1-2:SCE-11
+            name: 跳转到注册页面
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+            steps:
+              - action: 点击"注册12306账号"链接
+                expectation: 页面跳转到注册页面，URL变为"/register"。
+          - id: REQ-1-2:SCE-12
+            name: 跳转到找回密码页面
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+            steps:
+              - action: 点击"忘记密码？"链接
+                expectation: 页面跳转到找回密码页面，URL包含"find_password"。
+      - id: REQ-1-3
+        name: 找回密码
+        description: 用户忘记密码时，通过身份验证和手机验证重置密码。
+        dependencies:
+          - REQ-1-1
+        scenarios:
+          - id: REQ-1-3:SCE-0
+            name: 进入找回密码页
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+            steps:
+              - action: 点击"忘记密码？"链接
+                expectation: 跳转到找回密码页面，显示身份验证表单。
+          - id: REQ-1-3:SCE-1
+            name: 成功找回密码 - 完整流程
+            prerequisites:
+              - REQ-1-3:SCE-0 (已在找回密码页)
+              - REQ-1-1:SCE-1 (用户已注册)
+            steps:
+              - action: 输入已注册的用户名
+                expectation: 用户名输入框显示输入内容。
+              - action: 选择证件类型并输入姓名、证件号码
+                expectation: 表单字段显示输入值。
+              - action: 输入注册时绑定的手机号
+                expectation: 手机号输入框显示输入内容。
+              - action: 点击"下一步"按钮
+                expectation: 系统验证用户名、身份信息和手机号是否匹配，验证通过后发送短信验证码到手机号。
+              - action: 输入收到的6位验证码
+                expectation: 验证码输入框显示输入的数字。
+              - action: 点击"验证"按钮
+                expectation: 系统验证验证码正确性，通过后跳转到重置密码页面。
+              - action: 输入新密码和确认密码
+                expectation: 密码输入框显示掩码内容。
+              - action: 点击"确定"按钮
+                expectation: 系统更新数据库中的密码，显示"密码重置成功"提示，自动跳转到登录页面。
+          - id: REQ-1-3:SCE-2
+            name: 用户名不存在
+            prerequisites:
+              - REQ-1-3:SCE-0 (已在找回密码页)
+            steps:
+              - action: 输入不存在的用户名
+                expectation: 用户名输入框显示输入内容。
+              - action: 填写其他信息并点击"下一步"
+                expectation: 显示错误提示"用户名不存在"，页面不跳转。
+          - id: REQ-1-3:SCE-3
+            name: 身份信息验证失败
+            prerequisites:
+              - REQ-1-3:SCE-0 (已在找回密码页)
+              - REQ-1-1:SCE-1 (用户"test_user"已注册)
+            steps:
+              - action: 输入用户名"test_user"
+                expectation: 用户名输入框显示输入内容。
+              - action: 输入与注册时不匹配的姓名或证件号码
+                expectation: 表单字段显示输入值。
+              - action: 点击"下一步"按钮
+                expectation: 显示错误提示"身份信息验证失败，请检查姓名和证件号码"，页面不跳转。
+          - id: REQ-1-3:SCE-4
+            name: 手机号不匹配
+            prerequisites:
+              - REQ-1-3:SCE-0 (已在找回密码页)
+              - REQ-1-1:SCE-1 (用户"test_user"已注册，手机号"13800138000")
+            steps:
+              - action: 输入用户名"test_user"和正确的身份信息
+                expectation: 表单字段显示输入值。
+              - action: 输入与注册时不同的手机号"13900139000"
+                expectation: 手机号输入框显示输入内容。
+              - action: 点击"下一步"按钮
+                expectation: 显示错误提示"手机号与注册信息不符"，页面不跳转。
+          - id: REQ-1-3:SCE-5
+            name: 验证码错误
+            prerequisites:
+              - REQ-1-3:SCE-0 (已在找回密码页)
+              - REQ-1-1:SCE-1 (用户已注册)
+            steps:
+              - action: 完成身份验证，进入验证码输入页面
+                expectation: 显示验证码输入框，提示"验证码已发送至138****8000"。
+              - action: 输入错误的验证码
+                expectation: 验证码输入框显示输入内容。
+              - action: 点击"验证"按钮
+                expectation: 显示错误提示"验证码错误，请重新输入"，页面不跳转。
+          - id: REQ-1-3:SCE-6
+            name: 验证码过期
+            prerequisites:
+              - REQ-1-3:SCE-0 (已在找回密码页)
+              - REQ-1-1:SCE-1 (用户已注册)
+            steps:
+              - action: 完成身份验证，进入验证码输入页面
+                expectation: 显示验证码输入框和5分钟倒计时。
+              - action: 等待超过5分钟
+                expectation: 倒计时归零。
+              - action: 输入验证码并点击"验证"按钮
+                expectation: 显示错误提示"验证码已过期，请重新发送"，显示"重新发送"按钮。
+          - id: REQ-1-3:SCE-7
+            name: 重新发送验证码
+            prerequisites:
+              - REQ-1-3:SCE-0 (已在找回密码页)
+              - REQ-1-1:SCE-1 (用户已注册)
+            steps:
+              - action: 完成身份验证，进入验证码输入页面
+                expectation: 显示验证码输入框。
+              - action: 点击"重新发送"按钮
+                expectation: 系统重新发送验证码到手机号，显示提示"验证码已重新发送"，倒计时重新开始，"重新发送"按钮变为灰色不可点击60秒。
+          - id: REQ-1-3:SCE-8
+            name: 新密码格式验证
+            prerequisites:
+              - REQ-1-3:SCE-0 (已在找回密码页)
+              - REQ-1-1:SCE-1 (用户已注册)
+            steps:
+              - action: 通过身份验证和手机验证，进入重置密码页面
+                expectation: 显示新密码和确认密码输入框。
+              - action: 输入不符合规则的密码（如"123"，少于6位）
+                expectation: 密码输入框显示掩码。
+              - action: 移开焦点或点击"确定"按钮
+                expectation: 显示错误提示"密码必须为6-20位字符"，密码输入框标红，不更新密码。
+          - id: REQ-1-3:SCE-9
+            name: 新密码与确认密码不一致
+            prerequisites:
+              - REQ-1-3:SCE-0 (已在找回密码页)
+              - REQ-1-1:SCE-1 (用户已注册)
+            steps:
+              - action: 通过验证，进入重置密码页面
+                expectation: 显示密码输入框。
+              - action: 输入新密码"NewPassword123!"
+                expectation: 密码输入框显示掩码。
+              - action: 输入不一致的确认密码"NewPassword456!"
+                expectation: 确认密码输入框显示掩码。
+              - action: 点击"确定"按钮
+                expectation: 显示错误提示"两次输入的密码不一致"，确认密码输入框标红，不更新密码。
+          - id: REQ-1-3:SCE-10
+            name: 验证码发送频率限制
+            prerequisites:
+              - REQ-1-3:SCE-0 (已在找回密码页)
+              - REQ-1-1:SCE-1 (用户已注册)
+            steps:
+              - action: 完成身份验证，系统发送验证码
+                expectation: 显示提示"验证码已发送"。
+              - action: 立即点击"重新发送"按钮
+                expectation: '"重新发送"按钮为灰色不可点击状态，显示倒计时"60秒后可重新发送"。'
+              - action: 等待60秒后点击"重新发送"按钮
+                expectation: 系统成功发送新验证码，显示提示"验证码已重新发送"。
+  - id: REQ-2
+    name: 车票查询模块
+    description: 查询检索车票。
+    dependencies:
+      - REQ-1
+    scenarios:
+      - id: REQ-2:SCE-0
+        name: 查询模块基础设施初始化
+        prerequisites:
+          - ROOT:SCE-0
+        steps:
+          - action: 初始化车票数据模型
+            expectation: 在数据库创建 `stations` (车站), `trains` (车次), `train_station_mapping` (经停信息) 表；并初始化部分演示数据。
+    children:
+      - id: REQ-2-1
+        name: 首页快捷查询面板
+        description: 快捷查询单程车票，快捷查询面板参考图片：[image](./reference/search/quick_search.png)
+        dependencies: []
+        scenarios:
+          - id: REQ-2-1:SCE-1
+            name: 加载快捷查询面板UI
+            prerequisites:
+              - ROOT:SCE-0 (位于首页)
+            steps:
+              - action: 访问首页
+                expectation: 页面正确渲染快捷查询面板组件，包含出发地、目的地、日期选择及查询按钮。
+          - id: REQ-2-1:SCE-2
+            name: 出发地目的地互换
+            prerequisites:
+              - ROOT:SCE-0 (位于首页)
+            steps:
+              - action: 输入出发地和目的地
+                expectation: 输入框显示对应城市。
+              - action: 点击“互换”按钮
+                expectation: 出发地和目的地内容互换。
+        children:
+          - id: REQ-2-1-1
+            name: 出发地快捷输入
+            description: 点击出发地输入框，弹出快捷选择框，支持输入和快捷选择。出发地快捷选择参考图片：[image](./reference/search/quick_address.png)
+            dependencies: []
+            scenarios:
+              - id: REQ-2-1-1:SCE-0
+                name: 输入出发地
+                prerequisites:
+                  - ROOT:SCE-0 (位于首页)
+                steps:
+                  - action: 点击出发地输入框
+                    expectation: 弹出快捷选择框。
+                  - action: 输入城市名称
+                    expectation: 调用车站搜索接口，输入框显示输入的城市名称及联想结果。
+              - id: REQ-2-1-1:SCE-1
+                name: 快捷选择出发地
+                prerequisites:
+                  - ROOT:SCE-0 (位于首页)
+                steps:
+                  - action: 点击出发地输入框
+                    expectation: 弹出快捷选择框。
+                  - action: 选择城市
+                    expectation: 输入框显示选中的城市名称。
+          - id: REQ-2-1-2
+            name: 目的地快捷输入
+            description: 点击目的地输入框，弹出快捷选择框，支持输入和快捷选择。目的地快捷选择参考图片：[image](./reference/search/quick_address.png)
+            dependencies: []
+            scenarios:
+              - id: REQ-2-1-2:SCE-0
+                name: 输入目的地
+                prerequisites:
+                  - ROOT:SCE-0 (位于首页)
+                steps:
+                  - action: 点击目的地输入框
+                    expectation: 弹出快捷选择框。
+                  - action: 输入城市名称
+                    expectation: 调用车站搜索接口，输入框显示输入的城市名称及联想结果。
+              - id: REQ-2-1-2:SCE-1
+                name: 快捷选择目的地
+                prerequisites:
+                  - ROOT:SCE-0 (位于首页)
+                steps:
+                  - action: 点击目的地输入框
+                    expectation: 弹出快捷选择框。
+                  - action: 选择城市
+                    expectation: 输入框显示选中的城市名称。
+          - id: REQ-2-1-3
+            name: 选择出发日期
+            description: 点击出发日期输入框，弹出出发日期选择组件，参考图片：[image](./reference/search/quick_date.png)
+            dependencies: []
+            scenarios:
+              - id: REQ-2-1-3:SCE-0
+                name: 选择出发日期
+                prerequisites:
+                  - ROOT:SCE-0 (位于首页)
+                steps:
+                  - action: 点击出发日期输入框
+                    expectation: 弹出日期选择器，展示本月和下个月日期。
+                  - action: 点击选择日期
+                    expectation: 日期控件显示已选日期，格式为YYYY-MM-DD。
+      - id: REQ-2-2
+        name: 车次列表页
+        description: 展示车次数据，提供查询、筛选功能。参考图片：[image](./reference/search/result.png)
+        dependencies: []
+        scenarios:
+          - id: REQ-2-2:SCE-0
+            name: 车次列表页初始化
+            prerequisites:
+              - ROOT:SCE-0
+            steps:
+              - action: 建立页面路由
+                expectation: 创建 /search 路由及页面骨架。
+          - id: REQ-2-2:SCE-1
+            name: 首页点击进入车次列表
+            prerequisites:
+              - ROOT:SCE-0 (位于首页)
+            steps:
+              - action: 鼠标悬浮于导航栏的“车票”项
+                expectation: 展示下拉菜单，其中包含“单程”选项
+              - action: 点击“单程”选项
+                expectation: 页面展示车次列表页。
+        children:
+          - id: REQ-2-2-1
+            name: 车票查询框
+            description: 位于车票列表页上方的查询框，用于输入查询条件（如出发地、目的地、出发日期）。参考图片：[image](./reference/search/query.png)
+            dependencies:
+              - REQ-2-1-1
+              - REQ-2-1-2
+              - REQ-2-1-3
+            scenarios:
+              - id: REQ-2-2-1:SCE-0
+                name: 列表页查询单程车票
+                prerequisites:
+                  - REQ-2-2:SCE-0 (位于列表页)
+                steps:
+                  - action: REQ-2-1-1:SCE-0(输入出发地)
+                    expectation: 输入框显示有效的城市名称
+                  - action: REQ-2-1-2:SCE-0(输入目的地)
+                    expectation: 输入框显示有效的城市名称
+                  - action: REQ-2-1-3:SCE-0(选择出发日期)
+                    expectation: 日期控件显示已选日期。
+                  - action: 点击“查询”按钮
+                    expectation: 触发查询逻辑，更新URL参数。
+              - id: REQ-2-2-1:SCE-1
+                name: 查询条件验证失败
+                prerequisites:
+                  - REQ-2-2:SCE-0 (位于列表页)
+                steps:
+                  - action: 清空出发地或目的地
+                    expectation: 输入框内容为空。
+                  - action: 点击“查询”按钮
+                    expectation: 页面不跳转，空的输入框显示红色警告，提示“请输入出发地/目的地”。
+                  - action: 输入相同的出发地和目的地
+                    expectation: 输入框显示相同城市。
+                  - action: 点击“查询”按钮
+                    expectation: 页面不跳转，显示错误提示“出发地和目的地不能相同”。
+              - id: REQ-2-2-1:SCE-2
+                name: 普通票与学生票切换
+                prerequisites:
+                  - REQ-2-2:SCE-0 (位于列表页)
+                steps:
+                  - action: 选择“学生票”选项
+                    expectation: 选中状态更新。
+                  - action: 点击“查询”按钮
+                    expectation: 触发查询逻辑，返回结果包含学生票价信息（通常为原价75%）。
+              - id: REQ-2-2-1:SCE-3
+                name: 快速日期切换
+                prerequisites:
+                  - REQ-2-2:SCE-0 (位于列表页)
+                steps:
+                  - action: 点击日期快捷条上的某个日期（如“明天”）
+                    expectation: 自动更新查询日期为该日期，并重新触发查询，刷新车次列表。
+          - id: REQ-2-2-2
+            name: 车次筛选
+            description: 位于车次列表中查询框下方的筛选框，用于根据条件筛选车次（车次类型、车次席别）。参考图片：[image](./reference/search/filter.png)
+            dependencies: []
+            scenarios:
+              - id: REQ-2-2-2:SCE-0
+                name: 筛选车次
+                prerequisites:
+                  - REQ-2-2:SCE-0 (已查询到车次列表)
+                steps:
+                  - action: 选择车次类型（G-高铁/D-动车/Z-直达/T-特快/K-快速）
+                    expectation: 筛选框显示选中的车次类型，前端过滤列表仅展示选中类型的车次。
+                  - action: 选择车次席别（商务座/一等座/二等座/一等卧/二等卧/软卧/硬卧）
+                    expectation: 筛选框显示选中的车次席别，前端过滤列表仅展示选中席别对应的车次。
+              - id: REQ-2-2-2:SCE-1
+                name: 发车时间筛选
+                prerequisites:
+                  - REQ-2-2:SCE-0 (已查询到车次列表)
+                steps:
+                  - action: 选择发车时间段（如06:00-12:00）
+                    expectation: 列表仅显示该时间段内发车的车次。
+              - id: REQ-2-2-2:SCE-2
+                name: 出发/到达车站筛选
+                prerequisites:
+                  - REQ-2-2:SCE-0 (已查询到车次列表)
+                steps:
+                  - action: 勾选具体的出发车站（如“北京南”）
+                    expectation: 列表仅显示从北京南出发的车次。
+                  - action: 勾选具体的到达车站（如“上海虹桥”）
+                    expectation: 列表仅显示到达上海虹桥的车次。
+              - id: REQ-2-2-2:SCE-3
+                name: 多条件组合筛选
+                prerequisites:
+                  - REQ-2-2:SCE-0 (已查询到车次列表)
+                steps:
+                  - action: 同时选择“高铁”类型、“一等座”席别和“06:00-12:00”时间段
+                    expectation: 点击筛选后，列表仅显示同时满足以上所有条件的车次。
+              - id: REQ-2-2-2:SCE-4
+                name: 清除筛选
+                prerequisites:
+                  - REQ-2-2:SCE-0 (已应用筛选条件)
+                steps:
+                  - action: 点击“全部”或“清除筛选”按钮
+                    expectation: 所有筛选条件重置，列表恢复显示所有查询到的车次。
+              - id: REQ-2-2-2:SCE-5
+                name: 筛选后无结果
+                prerequisites:
+                  - REQ-2-2:SCE-0 (已查询到车次列表)
+                steps:
+                  - action: 设置严格的筛选条件组合
+                    expectation: 界面显示“当前筛选条件下无车次”，并提供“清除筛选”按钮。
+          - id: REQ-2-2-3
+            name: 车次列表
+            description: 位于车次列表页下方，核心功能，调用后端接口展示符合筛选条件的车次列表，参考图片：[image](./reference/search/result.png)
+            dependencies: []
+            scenarios:
+              - id: REQ-2-2-3:SCE-0
+                name: 展示符合筛选条件的车次列表
+                prerequisites:
+                  - REQ-2-2-1:SCE-0 (已触发查询)
+                steps:
+                  - action: 页面加载或点击查询
+                    expectation: 调用车次查询API (GET /api/trains)，返回数据并渲染车次列表，显示出发/到达时间、历时、票价及余票。
+              - id: REQ-2-2-3:SCE-1
+                name: 车次排序
+                prerequisites:
+                  - REQ-2-2-3:SCE-0 (列表已展示)
+                steps:
+                  - action: 点击表头的“出发时间”
+                    expectation: 车次按出发时间升序/降序排列。
+                  - action: 点击表头的“到达时间”
+                    expectation: 车次按到达时间升序/降序排列。
+                  - action: 点击表头的“历时”
+                    expectation: 车次按历时短长排序。
+              - id: REQ-2-2-3:SCE-2
+                name: 查询无车次
+                prerequisites:
+                  - REQ-2-2-1:SCE-0 (已触发查询)
+                steps:
+                  - action: 输入两地之间无直达车次的路线
+                    expectation: 列表区域显示“未查询到符合条件的车次”，并提示用户“建议使用接续换乘”或“更换日期”。
+              - id: REQ-2-2-3:SCE-3
+                name: 显示特殊车次
+                prerequisites:
+                  - REQ-2-2-3:SCE-0 (列表已展示)
+                steps:
+                  - action: 勾选“显示折扣车次”
+                    expectation: 列表中折扣票价高亮显示。
+                  - action: 勾选“显示积分兑换车次”
+                    expectation: 支持积分兑换的车次显示“兑”字标识。
+
+  - id: REQ-3
+    name: 个人中心
+    description: 管理购票所需的常用数据（如查看个人信息，乘车人）。参考图片：[image](./reference/center/self.png)
+    dependencies:
+      - REQ-1
+    scenarios:
+      - id: REQ-3:SCE-0
+        name: 个人中心基础设施初始化
+        prerequisites:
+          - REQ-1-2:SCE-1 (已登录)
+        steps:
+          - action: 初始化个人中心布局
+            expectation: 创建 /center 路由，生成包含侧边栏导航（个人信息、乘车人）的布局容器。
+          - action: 首页点击右上角“我的12306”
+            expectation: 进入个人中心页面。
+    children:
+      - id: REQ-3-1
+        name: 查看个人信息
+        description: 查看用户基本信息，参考图片：[image](./reference/center/info.png)
+        dependencies: []
+        scenarios:
+          - id: REQ-3-1:SCE-0
+            name: 查看个人信息
+            prerequisites:
+              - REQ-1-2:SCE-1 (已登录)
+              - REQ-3:SCE-0 (已进入个人中心页)
+            steps:
+              - action: 点击“个人信息”选项卡
+                expectation: 展开选项卡列表
+              - action: 点击“查看个人信息”选项卡
+                expectation: 调用用户信息接口，展示用户基本信息（如姓名、手机号、邮箱）。
+          - id: REQ-3-1:SCE-1
+            name: 编辑附加信息
+            prerequisites:
+              - REQ-3-1:SCE-0 (已在查看个人信息页)
+            steps:
+              - action: 点击附加信息区的“编辑”按钮
+                expectation: 切换至编辑模式，“编辑”按钮变为“保存”按钮，优惠（待）类型变为下拉选择框。
+              - action: 选择新的优惠类型（如“学生”）并点击“保存”
+                expectation: 调用更新接口，提示“修改成功”，页面显示新的优惠类型，退出编辑模式。
+      - id: REQ-3-2
+        name: 乘车人管理
+        description: 管理账户关联乘车人，参考图片：[image](./reference/center/passenger.png)
+        dependencies: []
+        scenarios:
+          - id: REQ-3-2:SCE-0
+            name: 乘车人模块初始化与列表查看
+            prerequisites:
+              - REQ-1-2:SCE-1 (已登录)
+              - REQ-3:SCE-0 (已进入个人中心页)
+            steps:
+              - action: 初始化乘车人数据表
+                expectation: 在数据库创建 `passengers` 表（包含id, name, id_type, id_no, phone, user_id等）。
+              - action: 点击“乘车人”选项卡并选择“查看乘车人”
+                expectation: 调用获取乘车人列表接口，展示用户已添加的乘车人列表。
+          - id: REQ-3-2:SCE-1
+            name: 搜索乘车人
+            prerequisites:
+              - REQ-3-2:SCE-0 (已在乘车人管理页)
+            steps:
+              - action: 在搜索框输入乘车人姓名关键词
+                expectation: 输入框显示输入内容。
+              - action: 点击“查询”按钮
+                expectation: 列表实时更新，仅显示匹配的乘车人。
+        children:
+          - id: REQ-3-2-1
+            name: 添加乘车人
+            description: 添加新的乘车人，添加乘车人表单参考图片：[image](./reference/center/add_passenger.png)
+            dependencies: []
+            scenarios:
+              - id: REQ-3-2-1:SCE-0
+                name: 添加乘车人
+                prerequisites:
+                  - REQ-1-2:SCE-1 (已登录)
+                  - REQ-3-2:SCE-0 (已进入乘车人管理页)
+                steps:
+                  - action: 点击“添加”按钮
+                    expectation: 弹出添加乘车人表单。
+                  - action: 填写乘车人姓名、证件类型、证件号码、手机号/电话
+                    expectation: 表单字段显示输入值。
+                  - action: 点击“保存”按钮
+                    expectation: 调用添加API，校验通过，添加乘车人到数据库并刷新列表。
+          - id: REQ-3-2-2
+            name: 删除乘车人
+            description: 删除已添加的乘车人，不能删除账号本人，删除确认框参考图片：[image](./reference/center/delete_passenger.png)
+            dependencies: []
+            scenarios:
+              - id: REQ-3-2-2:SCE-0
+                name: 删除乘车人
+                prerequisites:
+                  - REQ-1-2:SCE-1 (已登录)
+                  - REQ-3-2:SCE-0 (已进入乘车人管理页)
+                steps:
+                  - action: 点击乘车人列表项的“删除”按钮
+                    expectation: 弹出确认删除弹窗。
+                  - action: 点击“确定”按钮
+                    expectation: 调用删除API，校验通过，从数据库删除乘车人并刷新列表。
+          - id: REQ-3-2-3
+            name: 编辑乘车人
+            description: 编辑乘车人联系方式和优惠类型，不可编辑核心证件信息。
+            dependencies: []
+            scenarios:
+              - id: REQ-3-2-3:SCE-0
+                name: 编辑乘车人信息
+                prerequisites:
+                  - REQ-1-2:SCE-1 (已登录)
+                  - REQ-3-2:SCE-0 (已进入乘车人管理页)
+                steps:
+                  - action: 点击乘车人行对应的“修改”图标
+                    expectation: 跳转至编辑乘车人页面，手机号、优惠类型可编辑，姓名、证件信息只读。
+                  - action: 修改手机号或优惠类型，点击“保存”
+                    expectation: 调用更新API，校验通过，返回乘车人列表页并显示更新后的信息。
+
+  - id: REQ-4
+    name: 订单管理模块
+    description: 核心业务流程，预订车次，生成订单；查看、取消和支付订单。
+    dependencies:
+      - REQ-1
+      - REQ-2
+      - REQ-3
+    scenarios:
+      - id: REQ-4:SCE-0
+        name: 订单模块基础设施初始化
+        prerequisites:
+          - ROOT:SCE-0
+        steps:
+          - action: 初始化订单数据模型
+            expectation: 在数据库创建 `orders` (订单主表) 和 `order_items` (订单详情/车票表)，定义状态枚举（未支付/已支付/已取消）。
+    children:
+      - id: REQ-4-1
+        name: 订单管理页
+        description: 查看订单列表框架。参考图片：[image](./reference/order/order.png)
+        dependencies: []
+        scenarios:
+          - id: REQ-4-1:SCE-0
+            name: 进入订单管理页
+            prerequisites:
+              - REQ-1-2:SCE-1 (已登录)
+              - REQ-3:SCE-0 (已进入个人中心页)
+            steps:
+              - action: 点击左侧导航栏"订单中心"-"火车票订单"
+                expectation: 调用订单列表API，右侧展示选项卡，默认展示未完成订单。
+          - id: REQ-4-1:SCE-1
+            name: 切换订单标签
+            prerequisites:
+              - REQ-4-1:SCE-0 (已在订单管理页)
+            steps:
+              - action: 点击“未出行”标签
+                expectation: 列表刷新，显示已支付但未出行的订单，状态为“待出行”。
+              - action: 点击“历史订单”标签
+                expectation: 列表刷新，显示已完成或已取消的历史订单。
+          - id: REQ-4-1:SCE-2
+            name: 订单详情展示
+            prerequisites:
+              - REQ-4-1:SCE-0 (已在订单管理页)
+            steps:
+              - action: 查看订单卡片信息
+                expectation: 卡片包含订票日期、车次（G4087 北京南-上海虹桥）、乘客姓名、席位（二等座 10车16A）、票价及状态等完整信息。
+
+      - id: REQ-4-2
+        name: 预订车次
+        description: 车次列表页点击预订，跳转到订单填写页，生成订单，订单填写页参考图片：[image](./reference/order/book.png)
+        dependencies:
+          - REQ-2-2
+          - REQ-1-2
+          - REQ-3-1
+        scenarios:
+          - id: REQ-4-2:SCE-0
+            name: 预订车次
+            prerequisites:
+              - REQ-1-2:SCE-1 (已登录)
+              - REQ-2-2:SCE-0 (已进入车次列表页)
+            steps:
+              - action: 点击车次后的“预订”按钮
+                expectation: 跳转至订单填写页，回显车次信息。
+              - action: 快捷选择乘车人或输入乘车人姓名，证件号码
+                expectation: 表单字段显示输入值。
+              - action: 点击“提交订单”
+                expectation: 调用下单API，后端创建订单数据，返回订单ID，跳转到订单管理页（或支付页）。
+          - id: REQ-4-2:SCE-1
+            name: 选择乘车人
+            prerequisites:
+              - REQ-4-2:SCE-0 (已进入订单填写页)
+            steps:
+              - action: 勾选常用联系人复选框
+                expectation: 选中联系人，右侧显示乘客信息；若选择多人，票价累加。
+              - action: (若触发) 弹出“温馨提示”
+                expectation: 需点击“确认”关闭提示。
+          - id: REQ-4-2:SCE-2
+            name: 可视化选座
+            prerequisites:
+              - REQ-4-2:SCE-1 (已选人)
+            steps:
+              - action: 选择席别（如二等座）
+                expectation: 展开该席别座位图，靠窗位置带标识。
+              - action: 点击座位图标（如A座）
+                expectation: 图标变色（高亮），显示已选座位号。
+          - id: REQ-4-2:SCE-3
+            name: 提交订单异常（座位已占）
+            prerequisites:
+              - REQ-4-2:SCE-2 (已选座)
+            steps:
+              - action: 点击“提交订单”
+                expectation: 后端返回“该座位已被预订”错误，页面提示重新选座，被占座位置灰。
+
+      - id: REQ-4-3
+        name: 取消订单
+        description: 在未完成订单管理页，点击未完成订单的“取消订单”按钮，删除订单，参考图片：[image](./reference/order/cancel.png)
+        dependencies:
+          - REQ-2-2
+          - REQ-1-2
+          - REQ-3-1
+        scenarios:
+          - id: REQ-4-3:SCE-0
+            name: 取消订单
+            prerequisites:
+              - REQ-1-2:SCE-1 (已登录)
+              - REQ-4-2:SCE-0 (已预订车次)
+              - REQ-4-1:SCE-0 (已进入订单管理页)
+            steps:
+              - action: 点击未完成订单的“取消订单”按钮
+                expectation: 弹出确认取消弹窗
+              - action: 点击“确定”按钮
+                expectation: 调用取消订单API，校验通过，更新数据库订单状态，刷新列表。
+          - id: REQ-4-3:SCE-1
+            name: 放弃取消订单
+            prerequisites:
+              - REQ-4-1:SCE-0 (已在订单管理页)
+            steps:
+              - action: 点击“取消订单”按钮
+                expectation: 弹出确认对话框。
+              - action: 点击“取消”或关闭窗口
+                expectation: 对话框消失，订单保留。
+          - id: REQ-4-3:SCE-2
+            name: 取消次数受限
+            prerequisites:
+              - REQ-4-1:SCE-0 (已在订单管理页)
+            steps:
+              - action: 当日第4次尝试取消
+                expectation: 点击确定后，系统提示“取消次数已达上限”，订单取消失败。
+
+      - id: REQ-4-4
+        name: 支付订单
+        description: 在未完成订单管理页，点击未完成订单的“支付订单”按钮，跳转到支付页，参考图片：[image](./reference/order/pay.png)
+        dependencies:
+          - REQ-2-2
+          - REQ-1-2
+          - REQ-3-1
+        scenarios:
+          - id: REQ-4-4:SCE-0
+            name: 支付订单
+            prerequisites:
+              - REQ-1-2:SCE-1 (已登录)
+              - REQ-4-2:SCE-0 (已预订车次)
+              - REQ-4-1:SCE-0 (已进入订单管理页)
+            steps:
+              - action: 点击未完成订单的“支付订单”按钮
+                expectation: 调用支付API，模拟支付成功，更新数据库订单状态。
+              - action: 点击“未出行订单”
+                expectation: 展示未出行订单选项卡，包含支付后的订单。
