@@ -202,6 +202,14 @@ nodes:
     type: API
     path: backend/src/routes/api.js
     signature: GET /tickets
+  SearchResultPage:
+    type: UI
+    path: frontend/src/pages/SearchResultPage.jsx
+    description: Search Result Page with sorting and filtering
+  GetTickets:
+    type: API
+    path: backend/src/routes/api.js
+    signature: GET /tickets
 edges:
   - from: ROOT
     to: REQ-1
@@ -410,3 +418,15 @@ edges:
   - from: api_ticket_query
     to: ui_search_result_page
     relation: CALLS
+  - from: REQ-2-2-3
+    to: SearchResultPage
+    relation: DEFINES
+  - from: TicketQueryForm
+    to: SearchResultPage
+    relation: CALLS
+  - from: TicketFilter
+    to: SearchResultPage
+    relation: CALLS
+  - from: REQ-2-2-3
+    to: GetTickets
+    relation: DEFINES

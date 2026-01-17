@@ -20,7 +20,7 @@ const Header = () => {
           <div className="auth-links">
             <Link to="/login">登录</Link>
             <Link to="/register">注册</Link>
-            <Link to="/my">我的12306</Link>
+            <Link to="/center">我的12306</Link>
           </div>
         </div>
       </div>

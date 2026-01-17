@@ -87,3 +87,11 @@ ui_ticket_filter:
   upstream_ids: []
   downstream_ids:
     - ui_search_result_page
+SearchResultPage:
+  related_req_id: REQ-2-2-3
+  path: frontend/src/pages/SearchResultPage.jsx
+  description: Search Result Page with sorting and filtering
+  upstream_ids:
+    - TicketQueryForm
+    - TicketFilter
+  downstream_ids: []

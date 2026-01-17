@@ -43,3 +43,9 @@ api_ticket_query:
   upstream_ids: []
   downstream_ids:
     - ui_search_result_page
+GetTickets:
+  related_req_id: REQ-2-2-3
+  path: backend/src/routes/api.js
+  signature: GET /tickets
+  upstream_ids: []
+  downstream_ids: []

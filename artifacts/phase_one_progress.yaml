@@ -81,8 +81,11 @@
   artifacts:
     api_ids:
       - api_ticket_query
+      - GetTickets
+    ui_ids:
+      - SearchResultPage
 - id: REQ-3
-  status: unprocessed
+  status: processed
 - id: REQ-3-1
   status: unprocessed
 - id: REQ-3-2

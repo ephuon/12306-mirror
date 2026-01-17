@@ -4,6 +4,9 @@ import HomePage from './pages/HomePage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import SearchResultPage from './pages/SearchResultPage';
+import UserCenterPage from './pages/UserCenterPage';
+import PersonalInfo from './pages/center/PersonalInfo';
+import PassengerList from './pages/center/PassengerList';
 
 function App() {
   return (
@@ -12,6 +15,11 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/search" element={<SearchResultPage />} />
+      <Route path="/center" element={<UserCenterPage />}>
+        <Route index element={<PersonalInfo />} />
+        <Route path="personal" element={<PersonalInfo />} />
+        <Route path="passengers" element={<PassengerList />} />
+      </Route>
     </Routes>
   );
 }
