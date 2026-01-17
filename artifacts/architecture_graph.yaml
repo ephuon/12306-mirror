@@ -280,7 +280,7 @@ nodes:
   OrderList:
     type: UI
     path: frontend/src/pages/center/OrderList.jsx
-    description: Order List Page with Tabs (Upcoming/History)
+    description: Order List component with cancellation functionality
   getOrders:
     type: FUNC
     path: backend/src/database/operations.js
@@ -307,6 +307,16 @@ nodes:
     type: UI
     path: /Users/bladewaltz/Desktop/12306_rev/12306-mirror/frontend/src/pages/order/BookingPage.jsx
     description: 订单填写页面，展示车次信息，选择乘车人，提交订单
+  API_CancelOrder:
+    type: API
+    path: backend/src/routes/api.js
+    signature: PUT /api/orders/:id/cancel
+  Func_CancelOrder:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: cancelOrder(userId, orderId)
+    db_tables:
+      - orders
 edges:
   - from: ROOT
     to: REQ-1
@@ -647,3 +657,18 @@ edges:
   - from: API_createOrder
     to: BookingPage
     relation: CALLS
+  - from: REQ-4-3
+    to: OrderList
+    relation: DEFINES
+  - from: OrderList
+    to: API_CancelOrder
+    relation: CALLS
+  - from: REQ-4-3
+    to: API_CancelOrder
+    relation: DEFINES
+  - from: API_CancelOrder
+    to: Func_CancelOrder
+    relation: CALLS
+  - from: REQ-4-3
+    to: Func_CancelOrder
+    relation: DEFINES

@@ -106,3 +106,11 @@ FUNC_createOrder:
   db_tables:
     - orders
     - order_items
+Func_CancelOrder:
+  related_req_id: REQ-4-3
+  path: backend/src/database/operations.js
+  signature: cancelOrder(userId, orderId)
+  upstream_ids:
+    - API_CancelOrder
+  db_tables:
+    - orders

@@ -35,6 +35,24 @@ const OrderList = () => {
         }
     };
 
+    const handleCancel = async (orderId) => {
+        if (!window.confirm('确定要取消该订单吗？')) return;
+        
+        try {
+                const userStr = localStorage.getItem('user');
+                if (!userStr) return;
+                const user = JSON.parse(userStr);
+                
+                const res = await axios.put(`/api/orders/${orderId}/cancel`, { userId: user.id });
+                if (res.data.success) {
+                    await fetchOrders();
+                }
+            } catch (err) {
+            console.error('Cancel failed', err);
+            alert(err.response?.data?.message || '取消失败');
+        }
+    };
+
     return (
         <div className="order-list-page">
             <h2>火车票订单</h2>
@@ -84,7 +102,13 @@ const OrderList = () => {
                                      order.status === 'cancelled' ? '已取消' : '已完成'}
                                 </span>
                                 {order.status === 'pending' && (
-                                    <button className="btn-pay">去支付</button>
+                                    <>
+                                        <button className="btn-pay">去支付</button>
+                                        <button className="btn-cancel" onClick={() => handleCancel(order.id)}>取消订单</button>
+                                    </>
+                                )}
+                                {order.status === 'paid' && (
+                                    <button className="btn-cancel" onClick={() => handleCancel(order.id)}>取消订单</button>
                                 )}
                             </div>
                         </div>

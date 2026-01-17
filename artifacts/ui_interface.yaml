@@ -112,11 +112,12 @@ PassengerList:
 OrderList:
   related_req_id: REQ-4-1
   path: frontend/src/pages/center/OrderList.jsx
-  description: Order List Page with Tabs (Upcoming/History)
+  description: Order List component with cancellation functionality
   upstream_ids:
     - UserCenterPage
   downstream_ids:
     - API_GET_ORDERS
+    - API_CancelOrder
 BookingPage:
   related_req_id: REQ-4-2
   path: /Users/bladewaltz/Desktop/12306_rev/12306-mirror/frontend/src/pages/order/BookingPage.jsx

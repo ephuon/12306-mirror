@@ -146,6 +146,13 @@
     ui_ids:
       - BookingPage
 - id: REQ-4-3
-  status: unprocessed
+  status: processed
+  artifacts:
+    ui_ids:
+      - OrderList
+    api_ids:
+      - API_CancelOrder
+    func_ids:
+      - Func_CancelOrder
 - id: REQ-4-4
   status: unprocessed

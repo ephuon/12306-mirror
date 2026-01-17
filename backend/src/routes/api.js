@@ -288,7 +288,7 @@ router.post('/forgot-password/reset', async (req, res) => {
                 const { userId, status } = req.query;
                 if (!userId) return res.status(400).json({ success: false, message: 'Missing userId' });
                 
-                const orders = await operations.getOrders(userId, status);
+                const orders = await operations.getOrders(Number(userId), status);
                 res.status(200).json({ success: true, data: orders });
             } catch (err) {
                 console.error(err);
@@ -323,4 +323,29 @@ router.post('/forgot-password/reset', async (req, res) => {
     }
 });
 
-        module.exports = router;
+router.put('/orders/:id/cancel', async (req, res) => {
+    const userId = req.body.userId;
+    const orderId = req.params.id;
+
+    if (!userId) {
+        return res.status(401).json({ success: false, message: 'Unauthorized: Missing userId' });
+    }
+
+    try {
+        await operations.cancelOrder(userId, orderId);
+        res.json({ success: true });
+    } catch (err) {
+        console.error("Cancel Order Error:", err);
+        if (err.message.includes('limit exceeded')) {
+            res.status(403).json({ success: false, message: err.message });
+        } else if (err.message.includes('not in cancellable status')) {
+            res.status(400).json({ success: false, message: err.message });
+        } else if (err.message.includes('not found') || err.message.includes('belong to user')) {
+            res.status(404).json({ success: false, message: err.message });
+        } else {
+            res.status(500).json({ success: false, message: err.message });
+        }
+    }
+});
+
+module.exports = router;

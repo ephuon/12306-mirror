@@ -201,6 +201,7 @@ const getOrders = (userId, statusGroup) => {
         }
         
         const sql = `SELECT * FROM orders WHERE user_id = ? ${statusCondition} ORDER BY created_at DESC`;
+        console.log('getOrders SQL:', sql, 'Params:', userId);
         
         db.all(sql, params, async (err, orders) => {
             if (err) return reject(err);
@@ -281,6 +282,49 @@ const createOrder = (userId, trainNumber, passengerIds, seatType) => {
     });
 };
 
+const cancelOrder = (userId, orderId) => {
+    return new Promise((resolve, reject) => {
+        orderId = Number(orderId); // Force cast to Number
+        
+        // 1. Get Order
+        db.get('SELECT * FROM orders WHERE id = ?', [orderId], (err, order) => {
+            if (err) return reject(err);
+            if (!order) {
+                return reject(new Error(`Order ${orderId} not found`));
+            }
+            
+            if (order.user_id !== userId) {
+                return reject(new Error(`Order user_id ${order.user_id} does not match request user_id ${userId}`));
+            }
+            
+            // 2. Check Status
+            if (!['pending', 'paid'].includes(order.status)) {
+                return reject(new Error('Order is not in cancellable status'));
+            }
+            
+            // 3. Check Daily Limit
+            // We use SQLite's date function to compare the date part of cancelled_at with today's date
+            const sqlCount = `SELECT COUNT(*) as count FROM orders 
+                              WHERE user_id = ? 
+                              AND status = 'cancelled' 
+                              AND date(cancelled_at) = date('now')`;
+            
+            db.get(sqlCount, [userId], (err, row) => {
+                if (err) return reject(err);
+                if (row && row.count >= 3) {
+                    return reject(new Error('Daily cancellation limit exceeded'));
+                }
+                
+                // 4. Cancel
+                db.run(`UPDATE orders SET status = 'cancelled', cancelled_at = datetime('now') WHERE id = ?`, [orderId], function(err) {
+                    if (err) return reject(err);
+                    resolve(true);
+                });
+            });
+        });
+    });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -296,5 +340,6 @@ module.exports = {
   deletePassenger,
   updatePassenger,
   getOrders,
-  createOrder
+  createOrder,
+  cancelOrder
 };

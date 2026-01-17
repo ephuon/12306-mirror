@@ -8,6 +8,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
   } else {
     console.log('Connected to the SQLite database.');
     db.serialize(() => {
+      db.run('PRAGMA foreign_keys = ON');
       db.run(`CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE,
@@ -91,6 +92,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
         status TEXT CHECK(status IN ('pending', 'paid', 'cancelled', 'completed')),
         total_amount REAL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        cancelled_at DATETIME,
         FOREIGN KEY(user_id) REFERENCES users(id)
       )`);
 
