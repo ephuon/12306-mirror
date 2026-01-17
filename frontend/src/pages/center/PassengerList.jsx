@@ -9,8 +9,10 @@ const PassengerList = () => {
     const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     
-    // Add Modal State
+    // Add/Edit Modal State
     const [showAddModal, setShowAddModal] = useState(false);
+    const [modalMode, setModalMode] = useState('add'); // 'add' or 'edit'
+    const [editingId, setEditingId] = useState(null);
     const [newPassenger, setNewPassenger] = useState({
         name: '',
         id_type: '1',
@@ -68,20 +70,60 @@ const PassengerList = () => {
             if (!userStr) return;
             const user = JSON.parse(userStr);
 
-            const payload = { ...newPassenger, userId: user.id };
-            const res = await axios.post('/api/passengers', payload);
+            if (modalMode === 'add') {
+                const payload = { ...newPassenger, userId: user.id };
+                const res = await axios.post('/api/passengers', payload);
 
-            if (res.data.success) {
-                setShowAddModal(false);
-                setNewPassenger({ name: '', id_type: '1', id_no: '', phone: '', type: '成人' });
-                fetchPassengers(); // Refresh list
+                if (res.data.success) {
+                    setShowAddModal(false);
+                    setNewPassenger({ name: '', id_type: '1', id_no: '', phone: '', type: '成人' });
+                    fetchPassengers(); // Refresh list
+                } else {
+                    alert(res.data.message || '添加失败');
+                }
             } else {
-                alert(res.data.message || '添加失败');
+                // Edit Mode
+                const payload = { 
+                    phone: newPassenger.phone, 
+                    type: newPassenger.type, 
+                    userId: user.id 
+                };
+                const res = await axios.put(`/api/passengers/${editingId}`, payload);
+
+                if (res.data.success) {
+                    setShowAddModal(false);
+                    setNewPassenger({ name: '', id_type: '1', id_no: '', phone: '', type: '成人' });
+                    setEditingId(null);
+                    setModalMode('add');
+                    fetchPassengers(); // Refresh list
+                } else {
+                    alert(res.data.message || '修改失败');
+                }
             }
         } catch (err) {
             console.error(err);
-            alert('添加失败：' + err.message);
+            alert('操作失败：' + err.message);
         }
+    };
+
+    const handleEditClick = (passenger) => {
+        setModalMode('edit');
+        setEditingId(passenger.id);
+        setNewPassenger({
+            name: passenger.name,
+            id_type: passenger.id_type,
+            id_no: passenger.id_no,
+            phone: passenger.phone,
+            type: passenger.type
+        });
+        setShowAddModal(true);
+    };
+
+    const handleAddClick = () => {
+        setModalMode('add');
+        setEditingId(null);
+        setNewPassenger({ name: '', id_type: '1', id_no: '', phone: '', type: '成人' });
+        setShowAddModal(true);
     };
 
     const handleDeleteClick = (passenger) => {
@@ -129,7 +171,7 @@ const PassengerList = () => {
                     />
                     <button onClick={handleSearch}>搜索</button>
                 </div>
-                <button className="btn-add" onClick={() => setShowAddModal(true)}>添加乘车人</button>
+                <button className="btn-add" onClick={handleAddClick}>添加乘车人</button>
             </div>
             
             <table className="passenger-table">
@@ -157,7 +199,7 @@ const PassengerList = () => {
                                 <td>{p.phone}</td>
                                 <td>{p.type}</td>
                                 <td>
-                                    <button className="btn-link">编辑</button>
+                                    <button className="btn-link" onClick={() => handleEditClick(p)}>编辑</button>
                                     <button className="btn-link text-danger" onClick={() => handleDeleteClick(p)}>删除</button>
                                 </td>
                             </tr>
@@ -166,12 +208,12 @@ const PassengerList = () => {
                 </tbody>
             </table>
 
-            {/* Add Passenger Modal */}
+            {/* Add/Edit Passenger Modal */}
             {showAddModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h3>基本信息</h3>
+                            <h3>{modalMode === 'add' ? '添加乘车人' : '编辑乘车人'}</h3>
                             <button className="close-btn" onClick={() => setShowAddModal(false)}>×</button>
                         </div>
                         <div className="modal-body">
@@ -181,7 +223,8 @@ const PassengerList = () => {
                                     id="name"
                                     type="text" 
                                     value={newPassenger.name} 
-                                    onChange={e => setNewPassenger({...newPassenger, name: e.target.value})} 
+                                    onChange={e => setNewPassenger({...newPassenger, name: e.target.value})}
+                                    disabled={modalMode === 'edit'}
                                 />
                             </div>
                             <div className="form-group">
@@ -190,6 +233,7 @@ const PassengerList = () => {
                                     id="id_type"
                                     value={newPassenger.id_type} 
                                     onChange={e => setNewPassenger({...newPassenger, id_type: e.target.value})}
+                                    disabled={modalMode === 'edit'}
                                 >
                                     <option value="1">中国居民身份证</option>
                                     <option value="2">护照</option>
@@ -202,6 +246,7 @@ const PassengerList = () => {
                                     type="text" 
                                     value={newPassenger.id_no} 
                                     onChange={e => setNewPassenger({...newPassenger, id_no: e.target.value})}
+                                    disabled={modalMode === 'edit'}
                                 />
                             </div>
                             <div className="form-group">

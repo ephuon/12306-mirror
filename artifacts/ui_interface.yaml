@@ -98,7 +98,7 @@ SearchResultPage:
 PassengerList:
   related_req_id: REQ-3-2
   path: frontend/src/pages/center/PassengerList.jsx
-  description: Passenger List with Delete Modal
+  description: Passenger List with Add/Edit/Delete capabilities
   upstream_ids:
     - getPassengers
     - searchPassengers
@@ -107,3 +107,5 @@ PassengerList:
     - API_GET_PASSENGERS
     - API_POST_PASSENGERS
     - DELETE /api/passengers/:id
+    - PUT /api/passengers/:id
+    - POST /api/passengers

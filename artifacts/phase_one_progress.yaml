@@ -114,9 +114,19 @@
     func_ids:
       - deletePassenger
 - id: REQ-3-2-3
-  status: unprocessed
+  status: processed
+  artifacts:
+    ui_ids:
+      - PassengerList
+    api_ids:
+      - PUT /api/passengers/:id
+    func_ids:
+      - updatePassenger
 - id: REQ-4
-  status: unprocessed
+  status: processed
+  artifacts:
+    func_ids:
+      - func_init_orders_tables
 - id: REQ-4-1
   status: unprocessed
 - id: REQ-4-2

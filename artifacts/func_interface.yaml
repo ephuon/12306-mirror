@@ -74,3 +74,18 @@ deletePassenger:
     - DELETE /api/passengers/:id
   db_tables:
     - passengers
+updatePassenger:
+  related_req_id: REQ-3-2-3
+  path: backend/src/database/operations.js
+  signature: updatePassenger(id, userId, updates)
+  upstream_ids:
+    - PUT /api/passengers/:id
+  db_tables:
+    - passengers
+func_init_orders_tables:
+  related_req_id: REQ-4
+  path: backend/src/database/init_db.js
+  signature: db.run(CREATE TABLE orders/order_items)
+  db_tables:
+    - orders
+    - order_items

@@ -80,3 +80,11 @@ DELETE /api/passengers/:id:
     - PassengerList
   downstream_ids:
     - deletePassenger
+PUT /api/passengers/:id:
+  related_req_id: REQ-3-2-3
+  path: backend/src/routes/api.js
+  signature: PUT /api/passengers/:id
+  upstream_ids:
+    - PassengerList
+  downstream_ids:
+    - updatePassenger

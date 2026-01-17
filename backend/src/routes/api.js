@@ -263,4 +263,24 @@ router.post('/forgot-password/reset', async (req, res) => {
             }
         });
 
+        router.put('/passengers/:id', async (req, res) => {
+            try {
+                const { id } = req.params;
+                const { userId, phone, type } = req.body;
+                
+                if (!userId) return res.status(400).json({success: false, message: 'Missing userId'});
+                
+                // Note: name/id_no are ignored as per requirement
+                
+                await operations.updatePassenger(id, userId, { phone, type });
+                res.status(200).json({ success: true });
+            } catch (err) {
+                 if (err.message.includes('not found') || err.message.includes('permission denied')) {
+                     res.status(404).json({ success: false, message: err.message });
+                } else {
+                     res.status(500).json({ success: false, message: err.message });
+                }
+            }
+        });
+
         module.exports = router;

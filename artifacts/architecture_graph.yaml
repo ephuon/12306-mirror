@@ -213,7 +213,7 @@ nodes:
   PassengerList:
     type: UI
     path: frontend/src/pages/center/PassengerList.jsx
-    description: Passenger List with Delete Modal
+    description: Passenger List with Add/Edit/Delete capabilities
   GET /api/passengers:
     type: API
     path: backend/src/routes/api.js
@@ -260,6 +260,23 @@ nodes:
     signature: deletePassenger(id, userId)
     db_tables:
       - passengers
+  PUT /api/passengers/:id:
+    type: API
+    path: backend/src/routes/api.js
+    signature: PUT /api/passengers/:id
+  updatePassenger:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: updatePassenger(id, userId, updates)
+    db_tables:
+      - passengers
+  func_init_orders_tables:
+    type: FUNC
+    path: backend/src/database/init_db.js
+    signature: db.run(CREATE TABLE orders/order_items)
+    db_tables:
+      - orders
+      - order_items
 edges:
   - from: ROOT
     to: REQ-1
@@ -545,4 +562,25 @@ edges:
     relation: CALLS
   - from: REQ-3-2-2
     to: deletePassenger
+    relation: DEFINES
+  - from: REQ-3-2-3
+    to: PassengerList
+    relation: DEFINES
+  - from: PassengerList
+    to: PUT /api/passengers/:id
+    relation: CALLS
+  - from: PassengerList
+    to: POST /api/passengers
+    relation: CALLS
+  - from: REQ-3-2-3
+    to: PUT /api/passengers/:id
+    relation: DEFINES
+  - from: PUT /api/passengers/:id
+    to: updatePassenger
+    relation: CALLS
+  - from: REQ-3-2-3
+    to: updatePassenger
+    relation: DEFINES
+  - from: REQ-4
+    to: func_init_orders_tables
     relation: DEFINES

@@ -78,6 +78,36 @@ const db = new sqlite3.Database(dbPath, (err) => {
         FOREIGN KEY(user_id) REFERENCES users(id)
       )`);
 
+      // Order Management Infrastructure
+      db.run(`CREATE TABLE IF NOT EXISTS orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        train_number TEXT,
+        departure_date TEXT,
+        departure_station_id INTEGER,
+        arrival_station_id INTEGER,
+        departure_time TEXT,
+        arrival_time TEXT,
+        status TEXT CHECK(status IN ('pending', 'paid', 'cancelled', 'completed')),
+        total_amount REAL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(user_id) REFERENCES users(id)
+      )`);
+
+      db.run(`CREATE TABLE IF NOT EXISTS order_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_id INTEGER,
+        passenger_id INTEGER,
+        passenger_name TEXT,
+        passenger_id_no TEXT,
+        seat_type TEXT,
+        seat_number TEXT,
+        price REAL,
+        status TEXT DEFAULT 'normal',
+        FOREIGN KEY(order_id) REFERENCES orders(id),
+        FOREIGN KEY(passenger_id) REFERENCES passengers(id)
+      )`);
+
       // Seed Data
       db.get("SELECT count(*) as count FROM stations", (err, row) => {
           if (!err && row && row.count === 0) {

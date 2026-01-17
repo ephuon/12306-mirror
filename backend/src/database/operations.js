@@ -167,6 +167,28 @@ const deletePassenger = (id, userId) => {
     });
 };
 
+const updatePassenger = (id, userId, updates) => {
+    return new Promise((resolve, reject) => {
+        // First check if it belongs to user
+        db.get('SELECT id FROM passengers WHERE id = ? AND user_id = ?', [id, userId], (err, row) => {
+            if (err) return reject(err);
+            if (!row) return reject(new Error('Passenger not found or permission denied'));
+            
+            // Only allow updating phone and type (and potentially others if needed, but not name/id_no)
+            // If the user tries to update name/id_no, we just ignore those fields or throw error.
+            // Requirement says name/id_no are read-only.
+            
+            const { phone, type } = updates;
+            // Construct query dynamically or fixed since we only have 2 fields
+            
+            db.run('UPDATE passengers SET phone = ?, type = ? WHERE id = ?', [phone, type, id], function(err) {
+                if (err) return reject(err);
+                resolve(true);
+            });
+        });
+    });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -179,5 +201,6 @@ module.exports = {
   getPassengers,
   searchPassengers,
   addPassenger,
-  deletePassenger
+  deletePassenger,
+  updatePassenger
 };
