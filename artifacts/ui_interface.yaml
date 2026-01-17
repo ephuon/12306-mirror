@@ -37,3 +37,11 @@ ui_quick_search_panel:
     - HomePage
   downstream_ids:
     - api_query_ticket
+ui_station_selector:
+  related_req_id: REQ-2-1-1
+  path: frontend/src/components/StationSelector.jsx
+  description: Station selection component with fuzzy search and popup list
+  upstream_ids:
+    - api_stations_list
+    - api_stations_search
+  downstream_ids: []

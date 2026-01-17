@@ -1,0 +1,77 @@
+.search-panel {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 500px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  /* overflow: hidden;  <-- Removed to allow popup to overflow */
+  z-index: 100;
+}
+
+.panel-tabs {
+  display: flex;
+  background: #f0f0f0;
+}
+
+.panel-tabs span {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.panel-tabs span.active {
+  background: white;
+  color: #3B99FC;
+  border-top: 2px solid #3B99FC;
+}
+
+.panel-body {
+  padding: 20px;
+}
+
+.route-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group label {
+  width: 80px;
+  color: #666;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+.options {
+  margin: 15px 0;
+  display: flex;
+  gap: 20px;
+}
+
+.search-btn {
+  width: 100%;
+  padding: 10px;
+  background: #FF8201; /* 12306 Orange */
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.panel-footer {
+  padding: 10px 20px;
+  border-top: 1px solid #eee;
+}

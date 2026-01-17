@@ -47,6 +47,8 @@
     func_ids:
       - func_get_all_stations
       - func_search_stations
+    ui_ids:
+      - ui_station_selector
 - id: REQ-2-1-2
   status: unprocessed
 - id: REQ-2-1-3

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
+import QuickSearchPanel from '../components/QuickSearchPanel';
 import './HomePage.css';
 
 const HomePage = () => {
@@ -46,37 +47,7 @@ const HomePage = () => {
       <main className="main-banner">
         <div className="banner-content">
           {/* Search Panel */}
-          <div className="search-panel">
-            <div className="panel-tabs">
-              <span className="active">车票</span>
-              <span>候补</span>
-              <span>常用查询</span>
-            </div>
-            <div className="panel-body">
-              <div className="route-inputs">
-                <div className="input-group">
-                  <label>出发地</label>
-                  <input type="text" placeholder="简拼/全拼/汉字" />
-                </div>
-                <div className="input-group">
-                  <label>到达地</label>
-                  <input type="text" placeholder="简拼/全拼/汉字" />
-                </div>
-                <div className="input-group">
-                  <label>出发日期</label>
-                  <input type="text" placeholder="2023-01-01" />
-                </div>
-              </div>
-              <div className="options">
-                <label><input type="checkbox" /> 学生</label>
-                <label><input type="checkbox" /> 高铁/动车</label>
-              </div>
-              <button className="search-btn">查询</button>
-            </div>
-            <div className="panel-footer">
-              <Link to="/query">车票查询</Link>
-            </div>
-          </div>
+          <QuickSearchPanel />
         </div>
       </main>
       

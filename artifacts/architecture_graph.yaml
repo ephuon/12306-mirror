@@ -170,6 +170,10 @@ nodes:
     signature: searchStations(query)
     db_tables:
       - stations
+  ui_station_selector:
+    type: UI
+    path: frontend/src/components/StationSelector.jsx
+    description: Station selection component with fuzzy search and popup list
 edges:
   - from: ROOT
     to: REQ-1
@@ -330,3 +334,12 @@ edges:
   - from: REQ-2-1-1
     to: func_search_stations
     relation: DEFINES
+  - from: REQ-2-1-1
+    to: ui_station_selector
+    relation: DEFINES
+  - from: api_stations_list
+    to: ui_station_selector
+    relation: CALLS
+  - from: api_stations_search
+    to: ui_station_selector
+    relation: CALLS
