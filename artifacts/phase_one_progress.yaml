@@ -128,7 +128,14 @@
     func_ids:
       - func_init_orders_tables
 - id: REQ-4-1
-  status: unprocessed
+  status: processed
+  artifacts:
+    ui_ids:
+      - OrderList
+    func_ids:
+      - getOrders
+    api_ids:
+      - API_GET_ORDERS
 - id: REQ-4-2
   status: unprocessed
 - id: REQ-4-3

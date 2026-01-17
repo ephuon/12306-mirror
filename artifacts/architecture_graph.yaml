@@ -277,6 +277,21 @@ nodes:
     db_tables:
       - orders
       - order_items
+  OrderList:
+    type: UI
+    path: frontend/src/pages/center/OrderList.jsx
+    description: Order List Page with Tabs (Upcoming/History)
+  getOrders:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: getOrders(userId, statusGroup)
+    db_tables:
+      - orders
+      - order_items
+  API_GET_ORDERS:
+    type: API
+    path: backend/src/routes/api.js
+    signature: GET /api/orders
 edges:
   - from: ROOT
     to: REQ-1
@@ -583,4 +598,22 @@ edges:
     relation: DEFINES
   - from: REQ-4
     to: func_init_orders_tables
+    relation: DEFINES
+  - from: REQ-4-1
+    to: OrderList
+    relation: DEFINES
+  - from: UserCenterPage
+    to: OrderList
+    relation: CALLS
+  - from: OrderList
+    to: API_GET_ORDERS
+    relation: CALLS
+  - from: REQ-4-1
+    to: getOrders
+    relation: DEFINES
+  - from: API_GET_ORDERS
+    to: getOrders
+    relation: CALLS
+  - from: REQ-4-1
+    to: API_GET_ORDERS
     relation: DEFINES

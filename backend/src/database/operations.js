@@ -189,6 +189,41 @@ const updatePassenger = (id, userId, updates) => {
     });
 };
 
+const getOrders = (userId, statusGroup) => {
+    return new Promise((resolve, reject) => {
+        let statusCondition = "";
+        const params = [userId];
+        
+        if (statusGroup === 'upcoming') {
+            statusCondition = "AND status IN ('pending', 'paid')";
+        } else if (statusGroup === 'history') {
+            statusCondition = "AND status IN ('completed', 'cancelled')";
+        }
+        
+        const sql = `SELECT * FROM orders WHERE user_id = ? ${statusCondition} ORDER BY created_at DESC`;
+        
+        db.all(sql, params, async (err, orders) => {
+            if (err) return reject(err);
+            if (!orders || orders.length === 0) return resolve([]);
+            
+            try {
+                const ordersWithItems = await Promise.all(orders.map(async (order) => {
+                    const items = await new Promise((res, rej) => {
+                        db.all('SELECT * FROM order_items WHERE order_id = ?', [order.id], (e, rows) => {
+                            if (e) rej(e);
+                            else res(rows || []);
+                        });
+                    });
+                    return { ...order, items };
+                }));
+                resolve(ordersWithItems);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -202,5 +237,6 @@ module.exports = {
   searchPassengers,
   addPassenger,
   deletePassenger,
-  updatePassenger
+  updatePassenger,
+  getOrders
 };

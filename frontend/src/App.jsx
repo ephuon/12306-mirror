@@ -7,6 +7,7 @@ import SearchResultPage from './pages/SearchResultPage';
 import UserCenterPage from './pages/UserCenterPage';
 import PersonalInfo from './pages/center/PersonalInfo';
 import PassengerList from './pages/center/PassengerList';
+import OrderList from './pages/center/OrderList';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route index element={<PersonalInfo />} />
         <Route path="personal" element={<PersonalInfo />} />
         <Route path="passengers" element={<PassengerList />} />
+        <Route path="orders" element={<OrderList />} />
       </Route>
     </Routes>
   );

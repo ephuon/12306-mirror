@@ -283,4 +283,17 @@ router.post('/forgot-password/reset', async (req, res) => {
             }
         });
 
+        router.get('/orders', async (req, res) => {
+            try {
+                const { userId, status } = req.query;
+                if (!userId) return res.status(400).json({ success: false, message: 'Missing userId' });
+                
+                const orders = await operations.getOrders(userId, status);
+                res.status(200).json({ success: true, data: orders });
+            } catch (err) {
+                console.error(err);
+                res.status(500).json({ success: false, message: err.message });
+            }
+        });
+
         module.exports = router;

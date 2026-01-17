@@ -88,3 +88,11 @@ PUT /api/passengers/:id:
     - PassengerList
   downstream_ids:
     - updatePassenger
+API_GET_ORDERS:
+  related_req_id: REQ-4-1
+  path: backend/src/routes/api.js
+  signature: GET /api/orders
+  upstream_ids:
+    - OrderList
+  downstream_ids:
+    - getOrders

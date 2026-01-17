@@ -24,6 +24,14 @@ const UserCenterPage = () => {
                     </li>
                 </ul>
             </nav>
+            <h3>订单中心</h3>
+            <nav>
+                <ul>
+                    <li className={location.pathname === '/center/orders' ? 'active' : ''}>
+                        <Link to="/center/orders">火车票订单</Link>
+                    </li>
+                </ul>
+            </nav>
         </aside>
         <main className="content">
             <Outlet />

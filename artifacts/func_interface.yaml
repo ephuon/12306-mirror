@@ -89,3 +89,12 @@ func_init_orders_tables:
   db_tables:
     - orders
     - order_items
+getOrders:
+  related_req_id: REQ-4-1
+  path: backend/src/database/operations.js
+  signature: getOrders(userId, statusGroup)
+  upstream_ids:
+    - API_GET_ORDERS
+  db_tables:
+    - orders
+    - order_items

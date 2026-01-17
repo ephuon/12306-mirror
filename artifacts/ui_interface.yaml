@@ -109,3 +109,11 @@ PassengerList:
     - DELETE /api/passengers/:id
     - PUT /api/passengers/:id
     - POST /api/passengers
+OrderList:
+  related_req_id: REQ-4-1
+  path: frontend/src/pages/center/OrderList.jsx
+  description: Order List Page with Tabs (Upcoming/History)
+  upstream_ids:
+    - UserCenterPage
+  downstream_ids:
+    - API_GET_ORDERS
