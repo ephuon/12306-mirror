@@ -4,7 +4,11 @@
     ui_ids:
       - HomePage
 - id: REQ-1
-  status: unprocessed
+  status: processed
+  artifacts:
+    ui_ids:
+      - ui_login_page
+      - ui_register_page
 - id: REQ-1-1
   status: unprocessed
 - id: REQ-1-2

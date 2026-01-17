@@ -4,3 +4,15 @@ HomePage:
   description: 12306 Home Page with header, nav, and search panel placeholder
   upstream_ids: []
   downstream_ids: []
+ui_login_page:
+  related_req_id: REQ-1
+  path: frontend/src/pages/Login.jsx
+  description: 用户登录页面容器
+  upstream_ids: []
+  downstream_ids: []
+ui_register_page:
+  related_req_id: REQ-1
+  path: frontend/src/pages/Register.jsx
+  description: 用户注册页面容器
+  upstream_ids: []
+  downstream_ids: []

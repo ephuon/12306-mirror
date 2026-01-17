@@ -103,6 +103,14 @@ nodes:
     type: UI
     path: frontend/src/pages/HomePage.jsx
     description: 12306 Home Page with header, nav, and search panel placeholder
+  ui_login_page:
+    type: UI
+    path: frontend/src/pages/Login.jsx
+    description: 用户登录页面容器
+  ui_register_page:
+    type: UI
+    path: frontend/src/pages/Register.jsx
+    description: 用户注册页面容器
 edges:
   - from: ROOT
     to: REQ-1
@@ -178,4 +186,10 @@ edges:
     relation: HAS_CHILD
   - from: ROOT
     to: HomePage
+    relation: DEFINES
+  - from: REQ-1
+    to: ui_login_page
+    relation: DEFINES
+  - from: REQ-1
+    to: ui_register_page
     relation: DEFINES
