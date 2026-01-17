@@ -77,7 +77,10 @@
     ui_ids:
       - ui_ticket_filter
 - id: REQ-2-2-3
-  status: unprocessed
+  status: processed
+  artifacts:
+    api_ids:
+      - api_ticket_query
 - id: REQ-3
   status: unprocessed
 - id: REQ-3-1

@@ -54,8 +54,10 @@ ui_date_picker:
 ui_search_result_page:
   related_req_id: REQ-2-2
   path: frontend/src/pages/SearchResultPage.jsx
-  description: Main Search Result Page skeleton
-  upstream_ids: []
+  description: Main Search Result Page skeleton with query form, filter, and list
+  upstream_ids:
+    - ui_ticket_query_form
+    - ui_ticket_filter
   downstream_ids: []
 ui_header:
   related_req_id: REQ-2-2

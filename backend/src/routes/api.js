@@ -156,7 +156,9 @@ router.post('/forgot-password/reset', async (req, res) => {
         start_time: '09:00',
         end_time: '13:18',
         duration: '04:18',
-        seats: { business: 10, first: 5, second: 100 }
+        seats: { business: 10, first: 5, second: 100 },
+        prices: { business: 1750, first: 933, second: 553 },
+        tags: ['复兴号', '智能动车']
       },
       {
         id: '2',
@@ -167,7 +169,9 @@ router.post('/forgot-password/reset', async (req, res) => {
         start_time: '14:00',
         end_time: '18:18',
         duration: '04:18',
-        seats: { business: 0, first: 10, second: 50 }
+        seats: { business: 0, first: 10, second: 50 },
+        prices: { business: 1750, first: 933, second: 553 },
+        tags: ['复兴号']
       },
       {
         id: '3',
@@ -178,7 +182,10 @@ router.post('/forgot-password/reset', async (req, res) => {
         start_time: '08:00',
         end_time: '19:00',
         duration: '11:00',
-        seats: { second: 200, sleeper: 50 }
+        seats: { second: 200, sleeper: 50 },
+        prices: { second: 300, sleeper: 600 },
+        tags: ['积分兑换'],
+        can_exchange: true
       },
       {
         id: '4',
@@ -189,7 +196,10 @@ router.post('/forgot-password/reset', async (req, res) => {
         start_time: '19:00',
         end_time: '09:00',
         duration: '14:00',
-        seats: { hard_seat: 100, hard_sleeper: 50, soft_sleeper: 20 }
+        seats: { hard_seat: 100, hard_sleeper: 50, soft_sleeper: 20 },
+        prices: { hard_seat: 150, hard_sleeper: 300, soft_sleeper: 500 },
+        tags: ['折扣'],
+        is_discount: true
       }
     ];
 

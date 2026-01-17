@@ -181,7 +181,7 @@ nodes:
   ui_search_result_page:
     type: UI
     path: frontend/src/pages/SearchResultPage.jsx
-    description: Main Search Result Page skeleton
+    description: Main Search Result Page skeleton with query form, filter, and list
   ui_header:
     type: UI
     path: frontend/src/components/Header.jsx
@@ -198,6 +198,10 @@ nodes:
     type: UI
     path: frontend/src/components/TicketFilter.jsx
     description: Filter panel for train types and seats
+  api_ticket_query:
+    type: API
+    path: backend/src/routes/api.js
+    signature: GET /tickets
 edges:
   - from: ROOT
     to: REQ-1
@@ -398,5 +402,11 @@ edges:
     to: ui_ticket_filter
     relation: DEFINES
   - from: ui_ticket_filter
+    to: ui_search_result_page
+    relation: CALLS
+  - from: REQ-2-2-3
+    to: api_ticket_query
+    relation: DEFINES
+  - from: api_ticket_query
     to: ui_search_result_page
     relation: CALLS

@@ -20,7 +20,9 @@ describe('SearchResultPage Integration', () => {
       start_time: '09:00',
       end_time: '13:00',
       duration: '4h',
-      seats: { business: 10, first: 5 }
+      seats: { business: 10, first: 5 },
+      prices: { business: 1000, first: 500 },
+      is_discount: false
     },
     {
       id: '2',
@@ -31,7 +33,9 @@ describe('SearchResultPage Integration', () => {
       start_time: '10:00',
       end_time: '15:00',
       duration: '5h',
-      seats: { second: 100 }
+      seats: { second: 100 },
+      prices: { second: 300 },
+      is_discount: true
     }
   ];
 
@@ -96,5 +100,52 @@ describe('SearchResultPage Integration', () => {
         expect(screen.getByText('G1')).toBeInTheDocument();
         expect(screen.getByText('D1')).toBeInTheDocument();
     });
+  });
+
+  it('sorts tickets when sort headers are clicked', async () => {
+    render(
+      <MemoryRouter initialEntries={['/search?from=Beijing&to=Shanghai']}>
+        <SearchResultPage />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('G1')).toBeInTheDocument();
+    });
+
+    const timeHeader = screen.getByText(/出发时间/i);
+    
+    // Click once (ASC) -> G1 (09:00), D1 (10:00)
+    fireEvent.click(timeHeader);
+    
+    // Click twice (DESC) -> D1 (10:00), G1 (09:00)
+    fireEvent.click(timeHeader);
+    
+    await waitFor(() => {
+        const items = screen.getAllByRole('heading', { level: 3 });
+        expect(items[0]).toHaveTextContent('D1');
+        expect(items[1]).toHaveTextContent('G1');
+    });
+  });
+
+  it('filters by special flags', async () => {
+     render(
+       <MemoryRouter initialEntries={['/search?from=Beijing&to=Shanghai']}>
+         <SearchResultPage />
+       </MemoryRouter>
+     );
+ 
+     await waitFor(() => {
+       expect(screen.getByText('G1')).toBeInTheDocument();
+       expect(screen.getByText('D1')).toBeInTheDocument();
+     });
+
+     const discountCheckbox = screen.getByLabelText(/显示折扣车次/i);
+     fireEvent.click(discountCheckbox);
+
+     await waitFor(() => {
+         expect(screen.queryByText('G1')).not.toBeInTheDocument();
+         expect(screen.getByText('D1')).toBeInTheDocument();
+     });
   });
 });

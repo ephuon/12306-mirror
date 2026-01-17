@@ -13,6 +13,9 @@ const SearchResultPage = () => {
   const [filteredTickets, setFilteredTickets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({ types: [], seats: [] });
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [showDiscount, setShowDiscount] = useState(false);
+  const [showExchange, setShowExchange] = useState(false);
 
   // Initial values from URL
   const initialValues = {
@@ -61,8 +64,16 @@ const SearchResultPage = () => {
     setFilters(newFilters);
   };
 
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+        direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
   useEffect(() => {
-    let result = tickets;
+    let result = [...tickets];
     
     // Filter by Type
     if (filters.types.length > 0) {
@@ -72,16 +83,29 @@ const SearchResultPage = () => {
     // Filter by Seat
     if (filters.seats.length > 0) {
         result = result.filter(t => {
-            // Check if ticket has any of the selected seat types
-            // Mapping English keys to potential display names or just checking existence
-            // Mock data uses: business, first, second, hard_seat, etc.
-            // Filter passes values like: 'business', 'first', 'second'
             return filters.seats.some(seat => t.seats && t.seats[seat] !== undefined);
         });
     }
 
+    // Filter by Special Flags
+    if (showDiscount) {
+        result = result.filter(t => t.is_discount);
+    }
+    if (showExchange) {
+        result = result.filter(t => t.can_exchange);
+    }
+
+    // Sort
+    if (sortConfig.key) {
+        result.sort((a, b) => {
+            if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+
     setFilteredTickets(result);
-  }, [tickets, filters]);
+  }, [tickets, filters, sortConfig, showDiscount, showExchange]);
 
   return (
     <div className="search-result-page">
@@ -93,6 +117,24 @@ const SearchResultPage = () => {
           <TicketFilter onFilterChange={handleFilterChange} />
           
           <div className="result-area">
+            <div className="list-toolbar">
+                <div className="sort-options">
+                    <span className={`sort-item ${sortConfig.key === 'start_time' ? 'active' : ''}`} onClick={() => handleSort('start_time')}>
+                        出发时间 {sortConfig.key === 'start_time' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                    </span>
+                    <span className={`sort-item ${sortConfig.key === 'end_time' ? 'active' : ''}`} onClick={() => handleSort('end_time')}>
+                        到达时间 {sortConfig.key === 'end_time' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                    </span>
+                    <span className={`sort-item ${sortConfig.key === 'duration' ? 'active' : ''}`} onClick={() => handleSort('duration')}>
+                        历时 {sortConfig.key === 'duration' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                    </span>
+                </div>
+                <div className="special-filters">
+                    <label><input type="checkbox" checked={showDiscount} onChange={e => setShowDiscount(e.target.checked)} /> 显示折扣车次</label>
+                    <label><input type="checkbox" checked={showExchange} onChange={e => setShowExchange(e.target.checked)} /> 显示积分兑换车次</label>
+                </div>
+            </div>
+
             {loading ? (
                 <p>加载中...</p>
             ) : filteredTickets.length > 0 ? (
@@ -101,6 +143,12 @@ const SearchResultPage = () => {
                         <div key={ticket.id} className="ticket-item">
                             <div className="ticket-train">
                                 <h3>{ticket.train_no}</h3>
+                                <div className="tags">
+                                    {ticket.tags && ticket.tags.map(tag => (
+                                        <span key={tag} className="tag">{tag}</span>
+                                    ))}
+                                    {ticket.can_exchange && <span className="tag exchange">兑</span>}
+                                </div>
                             </div>
                             <div className="ticket-stations">
                                 <div className="station-info">
@@ -120,6 +168,9 @@ const SearchResultPage = () => {
                                 {Object.entries(ticket.seats).map(([type, count]) => (
                                     <div key={type} className="seat-info">
                                         <span className="seat-type">{type}</span>
+                                        <span className={`seat-price ${ticket.is_discount ? 'discount' : ''}`}>
+                                            ¥{ticket.prices && ticket.prices[type]}
+                                        </span>
                                         <span className={`seat-count ${count > 0 ? 'available' : 'none'}`}>
                                             {count > 0 ? `${count}张` : '无'}
                                         </span>
@@ -134,7 +185,8 @@ const SearchResultPage = () => {
                 </div>
             ) : (
                 <div className="no-results">
-                    <p>当前筛选条件下无车次</p>
+                    <p>未查询到符合条件的车次</p>
+                    <p>建议使用接续换乘或更换日期</p>
                 </div>
             )}
           </div>

@@ -36,3 +36,10 @@ api_stations_search:
   upstream_ids:
     - func_search_stations
   downstream_ids: []
+api_ticket_query:
+  related_req_id: REQ-2-2-3
+  path: backend/src/routes/api.js
+  signature: GET /tickets
+  upstream_ids: []
+  downstream_ids:
+    - ui_search_result_page

@@ -83,12 +83,84 @@
   gap: 15px;
 }
 
+.list-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+}
+
+.sort-options {
+    display: flex;
+    gap: 20px;
+}
+
+.sort-item {
+    cursor: pointer;
+    user-select: none;
+    padding: 5px 10px;
+}
+
+.sort-item:hover {
+    color: #007bff;
+}
+
+.sort-item.active {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.special-filters {
+    display: flex;
+    gap: 20px;
+}
+
+.special-filters label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tags {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.tag {
+    font-size: 10px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    border: 1px solid #007bff;
+    color: #007bff;
+}
+
+.tag.exchange {
+    border-color: #ff8800;
+    color: #ff8800;
+}
+
+.seat-price {
+    color: #ff6600;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.seat-price.discount {
+    color: #e60000;
+}
+
 .seat-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 12px;
-  width: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+    width: 60px;
+    height: auto;
+    justify-content: flex-start;
 }
 
 .seat-count.available {
