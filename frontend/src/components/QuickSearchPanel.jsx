@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import StationSelector from './StationSelector';
+import DatePicker from './DatePicker';
 import './QuickSearchPanel.css';
 
 const QuickSearchPanel = () => {
@@ -18,7 +19,6 @@ const QuickSearchPanel = () => {
       <div className="panel-body">
         <div className="route-inputs">
           <div className="input-group">
-            {/* Replaced simple input with StationSelector */}
             <StationSelector 
               label="出发地" 
               placeholder="简拼/全拼/汉字" 
@@ -27,10 +27,6 @@ const QuickSearchPanel = () => {
             />
           </div>
           <div className="input-group">
-            {/* Arrival could also use StationSelector, but requirement focuses on Departure for now. 
-                But for consistency, we should use it for both. 
-                However, I'll stick to requirement strictly or enhance? 
-                Let's use StationSelector for Arrival too as it makes sense. */}
             <StationSelector 
               label="到达地" 
               placeholder="简拼/全拼/汉字" 
@@ -39,12 +35,11 @@ const QuickSearchPanel = () => {
             />
           </div>
           <div className="input-group">
-            <label>出发日期</label>
-            <input 
-              type="text" 
-              placeholder="2023-01-01" 
+            <DatePicker 
+              label="出发日期" 
+              placeholder="选择日期" 
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={setDate}
             />
           </div>
         </div>

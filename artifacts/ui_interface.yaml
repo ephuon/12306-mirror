@@ -45,3 +45,9 @@ ui_station_selector:
     - api_stations_list
     - api_stations_search
   downstream_ids: []
+ui_date_picker:
+  related_req_id: REQ-2-1-3
+  path: frontend/src/components/DatePicker.jsx
+  description: Date picker component with month view and date selection logic
+  upstream_ids: []
+  downstream_ids: []

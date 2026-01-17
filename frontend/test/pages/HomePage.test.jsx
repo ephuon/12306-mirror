@@ -140,4 +140,30 @@ describe('Full-Stack Integration: <HomePage />', () => {
     // Verify input value
     expect(arrivalInput.value).toBe('北京南');
   });
+
+  it('interacts with DatePicker to choose departure date', async () => {
+    render(
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
+    );
+
+    const dateInput = screen.getByPlaceholderText('选择日期');
+    fireEvent.focus(dateInput);
+
+    // Wait for popup (calendar days)
+    await waitFor(() => {
+        // Look for day-btn class
+        const dayButtons = document.querySelectorAll('.day-btn');
+        expect(dayButtons.length).toBeGreaterThan(0);
+    });
+
+    const dayButtons = document.querySelectorAll('.day-btn');
+    
+    // Click the first available day
+    fireEvent.click(dayButtons[0]);
+
+    // Verify input is populated
+    expect(dateInput.value).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
 });
