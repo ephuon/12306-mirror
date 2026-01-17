@@ -37,6 +37,44 @@ const db = new sqlite3.Database(dbPath, (err) => {
         expires_at DATETIME,
         is_used INTEGER DEFAULT 0
       )`);
+
+      // Ticket Query Infrastructure
+      db.run(`CREATE TABLE IF NOT EXISTS stations (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE,
+        code TEXT UNIQUE,
+        city_name TEXT
+      )`);
+
+      db.run(`CREATE TABLE IF NOT EXISTS trains (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        train_number TEXT UNIQUE,
+        type TEXT
+      )`);
+
+      db.run(`CREATE TABLE IF NOT EXISTS train_station_mapping (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        train_id INTEGER,
+        station_id INTEGER,
+        arrival_time TEXT,
+        departure_time TEXT,
+        stop_order INTEGER,
+        price_from_start REAL,
+        FOREIGN KEY(train_id) REFERENCES trains(id),
+        FOREIGN KEY(station_id) REFERENCES stations(id)
+      )`);
+
+      // Seed Data
+      db.get("SELECT count(*) as count FROM stations", (err, row) => {
+          if (!err && row && row.count === 0) {
+              const stmt = db.prepare("INSERT INTO stations (name, code, city_name) VALUES (?, ?, ?)");
+              stmt.run('北京南', 'BJP', '北京');
+              stmt.run('上海虹桥', 'SHH', '上海');
+              stmt.run('南京南', 'NKH', '南京');
+              stmt.run('杭州东', 'HGH', '杭州');
+              stmt.finalize();
+          }
+      });
     });
   }
 });
