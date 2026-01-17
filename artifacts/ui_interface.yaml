@@ -1,0 +1,6 @@
+HomePage:
+  related_req_id: ROOT
+  path: frontend/src/pages/HomePage.jsx
+  description: 12306 Home Page with header, nav, and search panel placeholder
+  upstream_ids: []
+  downstream_ids: []

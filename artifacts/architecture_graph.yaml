@@ -99,6 +99,10 @@ nodes:
     type: REQUIREMENT
     name: 支付订单
     description: 在未完成订单管理页，点击未完成订单的“支付订单”按钮，跳转到支付页，参考图片：[image](./reference/order/pay.png)
+  HomePage:
+    type: UI
+    path: frontend/src/pages/HomePage.jsx
+    description: 12306 Home Page with header, nav, and search panel placeholder
 edges:
   - from: ROOT
     to: REQ-1
@@ -172,3 +176,6 @@ edges:
   - from: REQ-4
     to: REQ-4-4
     relation: HAS_CHILD
+  - from: ROOT
+    to: HomePage
+    relation: DEFINES

@@ -1,0 +1,171 @@
+/* Basic reset/styles to mimic 12306 blue theme */
+.home-page {
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background-color: #fff;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.header-content, .nav-content, .banner-content {
+  width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 40px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.search-bar {
+  display: flex;
+}
+
+.search-bar input {
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+.auth-links a {
+  margin-left: 15px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.nav-bar {
+  background-color: #3B99FC; /* 12306 Blue */
+  height: 40px;
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+.nav-list li {
+  height: 100%;
+}
+
+.nav-list li a {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 20px;
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.nav-list li.active {
+  background-color: #2676E3;
+}
+
+.main-banner {
+  flex: 1;
+  background-color: #f8f8f8; /* Placeholder for image */
+  height: 450px;
+  position: relative;
+  /* background-image: url('...'); */
+  background-size: cover;
+}
+
+.search-panel {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 500px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.panel-tabs {
+  display: flex;
+  background: #f0f0f0;
+}
+
+.panel-tabs span {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.panel-tabs span.active {
+  background: white;
+  color: #3B99FC;
+  border-top: 2px solid #3B99FC;
+}
+
+.panel-body {
+  padding: 20px;
+}
+
+.route-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group label {
+  width: 80px;
+  color: #666;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+.options {
+  margin: 15px 0;
+  display: flex;
+  gap: 20px;
+}
+
+.search-btn {
+  width: 100%;
+  padding: 10px;
+  background: #FF8201; /* 12306 Orange */
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.panel-footer {
+  padding: 10px 20px;
+  border-top: 1px solid #eee;
+}
+
+.footer {
+  background: #eee;
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
