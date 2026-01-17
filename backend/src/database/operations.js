@@ -39,7 +39,73 @@ const loginUser = (credentials) => {
   });
 };
 
+const verifyUserIdentity = (criteria) => {
+    return new Promise((resolve, reject) => {
+        const { username, realName, idCard, phone } = criteria;
+        const sql = `SELECT * FROM users WHERE username = ?`;
+        
+        db.get(sql, [username], (err, row) => {
+            if (err) return reject(err);
+            if (!row) return reject(new Error('User not found'));
+            
+            if (row.real_name !== realName || row.id_card !== idCard || row.phone !== phone) {
+                return reject(new Error('Identity verification failed'));
+            }
+            
+            resolve(true);
+        });
+    });
+};
+
+const storeVerificationCode = (phone, code) => {
+    return new Promise((resolve, reject) => {
+        // Expire in 5 minutes
+        const expiresAt = new Date(Date.now() + 5 * 60000).toISOString();
+        const stmt = db.prepare('INSERT INTO verification_codes (phone, code, expires_at) VALUES (?, ?, ?)');
+        stmt.run(phone, code, expiresAt, function(err) {
+            if (err) return reject(err);
+            resolve(this.lastID);
+        });
+        stmt.finalize();
+    });
+};
+
+const verifyCode = (phone, code) => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT * FROM verification_codes WHERE phone = ? AND code = ? AND is_used = 0 ORDER BY created_at DESC LIMIT 1`;
+        
+        db.get(sql, [phone, code], (err, row) => {
+            if (err) return reject(err);
+            if (!row) return reject(new Error('Invalid or expired verification code'));
+            
+            const now = new Date().toISOString();
+            if (row.expires_at < now) {
+                return reject(new Error('Invalid or expired verification code'));
+            }
+            
+            // Mark as used
+            db.run('UPDATE verification_codes SET is_used = 1 WHERE id = ?', [row.id], (err) => {
+                if (err) return reject(err);
+                resolve(true);
+            });
+        });
+    });
+};
+
+const updatePassword = (username, newPassword) => {
+    return new Promise((resolve, reject) => {
+        db.run('UPDATE users SET password = ? WHERE username = ?', [newPassword, username], function(err) {
+            if (err) return reject(err);
+            resolve(true);
+        });
+    });
+};
+
 module.exports = {
   createUser,
-  loginUser
+  loginUser,
+  verifyUserIdentity,
+  storeVerificationCode,
+  verifyCode,
+  updatePassword
 };

@@ -122,6 +122,30 @@ nodes:
     db_tables:
       - users
       - login_attempts
+  ui_forgot_password_page:
+    type: UI
+    path: frontend/src/pages/ForgotPassword.jsx
+    description: Forgot Password Page with multi-step wizard
+  api_forgot_password_verify_user:
+    type: API
+    path: backend/src/routes/api.js
+    signature: POST /api/forgot-password/verify-user
+  api_forgot_password_reset:
+    type: API
+    path: backend/src/routes/api.js
+    signature: POST /api/forgot-password/reset
+  func_verifyUserIdentity:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: verifyUserIdentity(criteria)
+    db_tables:
+      - users
+  func_updatePassword:
+    type: FUNC
+    path: backend/src/database/operations.js
+    signature: updatePassword(username, newPassword)
+    db_tables:
+      - users
 edges:
   - from: ROOT
     to: REQ-1
@@ -218,4 +242,40 @@ edges:
     relation: CALLS
   - from: REQ-1-2
     to: func_loginUser
+    relation: DEFINES
+  - from: REQ-1-3
+    to: ui_forgot_password_page
+    relation: DEFINES
+  - from: ui_login_page
+    to: ui_forgot_password_page
+    relation: CALLS
+  - from: ui_forgot_password_page
+    to: api_forgot_password_verify_user
+    relation: CALLS
+  - from: ui_forgot_password_page
+    to: api_forgot_password_send_code
+    relation: CALLS
+  - from: ui_forgot_password_page
+    to: api_forgot_password_verify_code
+    relation: CALLS
+  - from: ui_forgot_password_page
+    to: api_forgot_password_reset
+    relation: CALLS
+  - from: REQ-1-3
+    to: api_forgot_password_verify_user
+    relation: DEFINES
+  - from: api_forgot_password_verify_user
+    to: func_verifyUserIdentity
+    relation: CALLS
+  - from: REQ-1-3
+    to: api_forgot_password_reset
+    relation: DEFINES
+  - from: api_forgot_password_reset
+    to: func_updatePassword
+    relation: CALLS
+  - from: REQ-1-3
+    to: func_verifyUserIdentity
+    relation: DEFINES
+  - from: REQ-1-3
+    to: func_updatePassword
     relation: DEFINES

@@ -28,6 +28,15 @@ const db = new sqlite3.Database(dbPath, (err) => {
         last_attempt_time DATETIME,
         UNIQUE(username, ip)
       )`);
+
+      db.run(`CREATE TABLE IF NOT EXISTS verification_codes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        phone TEXT,
+        code TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        expires_at DATETIME,
+        is_used INTEGER DEFAULT 0
+      )`);
     });
   }
 });

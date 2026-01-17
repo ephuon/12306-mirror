@@ -7,3 +7,19 @@ func_loginUser:
   db_tables:
     - users
     - login_attempts
+func_verifyUserIdentity:
+  related_req_id: REQ-1-3
+  path: backend/src/database/operations.js
+  signature: verifyUserIdentity(criteria)
+  upstream_ids:
+    - api_forgot_password_verify_user
+  db_tables:
+    - users
+func_updatePassword:
+  related_req_id: REQ-1-3
+  path: backend/src/database/operations.js
+  signature: updatePassword(username, newPassword)
+  upstream_ids:
+    - api_forgot_password_reset
+  db_tables:
+    - users
