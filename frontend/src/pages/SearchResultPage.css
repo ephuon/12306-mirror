@@ -1,13 +1,132 @@
+.search-result-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .search-content {
-  background-color: #f8f8f8;
-  min-height: calc(100vh - 200px);
+  flex: 1;
+  background-color: #f8f9fa;
   padding: 20px 0;
 }
 
-.search-content .container {
+.container {
   width: 1200px;
   margin: 0 auto;
-  background-color: white;
+}
+
+.ticket-list {
+  background: white;
+  border: 1px solid #ddd;
+}
+
+.ticket-item {
+  display: flex;
+  align-items: center;
   padding: 20px;
-  min-height: 400px;
+  border-bottom: 1px solid #eee;
+}
+
+.ticket-item:last-child {
+  border-bottom: none;
+}
+
+.ticket-train {
+  width: 100px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.ticket-stations {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.station-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.station-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.station-name.start {
+  color: #333;
+}
+
+.station-name.end {
+  color: #333;
+}
+
+.time {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.duration-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #999;
+  font-size: 12px;
+}
+
+.ticket-seats {
+  flex: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.seat-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  width: 60px;
+}
+
+.seat-count.available {
+  color: #26a306;
+  font-weight: bold;
+}
+
+.seat-count.none {
+  color: #999;
+}
+
+.ticket-action {
+  width: 100px;
+  text-align: right;
+}
+
+.book-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.book-btn:hover {
+  background-color: #0056b3;
+}
+
+.no-results {
+  text-align: center;
+  padding: 50px;
+  color: #666;
+}
+
+.footer {
+  background: #eee;
+  padding: 20px;
+  text-align: center;
+  color: #666;
 }

@@ -67,9 +67,15 @@
       - ui_header
       - ui_navbar
 - id: REQ-2-2-1
-  status: unprocessed
+  status: processed
+  artifacts:
+    ui_ids:
+      - ui_ticket_query_form
 - id: REQ-2-2-2
-  status: unprocessed
+  status: processed
+  artifacts:
+    ui_ids:
+      - ui_ticket_filter
 - id: REQ-2-2-3
   status: unprocessed
 - id: REQ-3

@@ -190,6 +190,14 @@ nodes:
     type: UI
     path: frontend/src/components/Navbar.jsx
     description: Global Navigation Bar with Dropdown
+  ui_ticket_query_form:
+    type: UI
+    path: frontend/src/components/TicketQueryForm.jsx
+    description: Ticket query form with station and date selection
+  ui_ticket_filter:
+    type: UI
+    path: frontend/src/components/TicketFilter.jsx
+    description: Filter panel for train types and seats
 edges:
   - from: ROOT
     to: REQ-1
@@ -374,3 +382,21 @@ edges:
   - from: REQ-2-2
     to: ui_navbar
     relation: DEFINES
+  - from: REQ-2-2-1
+    to: ui_ticket_query_form
+    relation: DEFINES
+  - from: ui_station_selector
+    to: ui_ticket_query_form
+    relation: CALLS
+  - from: ui_date_picker
+    to: ui_ticket_query_form
+    relation: CALLS
+  - from: ui_ticket_query_form
+    to: ui_search_result_page
+    relation: CALLS
+  - from: REQ-2-2-2
+    to: ui_ticket_filter
+    relation: DEFINES
+  - from: ui_ticket_filter
+    to: ui_search_result_page
+    relation: CALLS

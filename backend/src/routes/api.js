@@ -144,4 +144,62 @@ router.post('/forgot-password/reset', async (req, res) => {
     }
   });
 
+  router.get('/tickets', async (req, res) => {
+    // Mock data for now
+    const mockTickets = [
+      {
+        id: '1',
+        train_no: 'G1',
+        type: 'G',
+        from_station: '北京南',
+        to_station: '上海虹桥',
+        start_time: '09:00',
+        end_time: '13:18',
+        duration: '04:18',
+        seats: { business: 10, first: 5, second: 100 }
+      },
+      {
+        id: '2',
+        train_no: 'G2',
+        type: 'G',
+        from_station: '上海虹桥',
+        to_station: '北京南',
+        start_time: '14:00',
+        end_time: '18:18',
+        duration: '04:18',
+        seats: { business: 0, first: 10, second: 50 }
+      },
+      {
+        id: '3',
+        train_no: 'D101',
+        type: 'D',
+        from_station: '北京南',
+        to_station: '上海虹桥',
+        start_time: '08:00',
+        end_time: '19:00',
+        duration: '11:00',
+        seats: { second: 200, sleeper: 50 }
+      },
+      {
+        id: '4',
+        train_no: 'Z1',
+        type: 'Z',
+        from_station: '北京',
+        to_station: '上海',
+        start_time: '19:00',
+        end_time: '09:00',
+        duration: '14:00',
+        seats: { hard_seat: 100, hard_sleeper: 50, soft_sleeper: 20 }
+      }
+    ];
+
+    // Simple filtering based on from/to/date (date ignored for mock)
+    const { from, to } = req.query;
+    let filtered = mockTickets;
+    if (from) filtered = filtered.filter(t => t.from_station.includes(from));
+    if (to) filtered = filtered.filter(t => t.to_station.includes(to));
+
+    res.json({ success: true, data: filtered });
+  });
+
 module.exports = router;

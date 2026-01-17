@@ -1,0 +1,72 @@
+
+.ticket-query-form {
+  background-color: #eef1f6;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.query-row {
+  display: flex;
+  align-items: flex-end; /* Align bottom for inputs and button */
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.input-group {
+  flex: 1;
+}
+
+.swap-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 1.2em;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px; /* Adjust alignment */
+  background: white;
+}
+
+.swap-btn:hover {
+  background: #f0f0f0;
+  color: #3B99FC;
+}
+
+.query-btn {
+  background-color: #ff8201;
+  color: white;
+  border: none;
+  padding: 8px 30px;
+  height: 40px; /* Match input height roughly */
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.query-btn:hover {
+  background-color: #e67500;
+}
+
+.options-row {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: #666;
+  padding-left: 5px;
+}
+
+.options-row label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

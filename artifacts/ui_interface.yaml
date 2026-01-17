@@ -69,3 +69,19 @@ ui_navbar:
   description: Global Navigation Bar with Dropdown
   upstream_ids: []
   downstream_ids: []
+ui_ticket_query_form:
+  related_req_id: REQ-2-2-1
+  path: frontend/src/components/TicketQueryForm.jsx
+  description: Ticket query form with station and date selection
+  upstream_ids:
+    - ui_station_selector
+    - ui_date_picker
+  downstream_ids:
+    - ui_search_result_page
+ui_ticket_filter:
+  related_req_id: REQ-2-2-2
+  path: frontend/src/components/TicketFilter.jsx
+  description: Filter panel for train types and seats
+  upstream_ids: []
+  downstream_ids:
+    - ui_search_result_page
