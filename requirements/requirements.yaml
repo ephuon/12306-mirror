@@ -934,3 +934,121 @@ children:
                 expectation: 调用支付API，模拟支付成功，更新数据库订单状态。
               - action: 点击“未出行订单”
                 expectation: 展示未出行订单选项卡，包含支付后的订单。
+  - id: REQ-5
+    name: 路由跳转测试模块
+    description: 验证关键功能的路由跳转是否正常工作，确保用户点击按钮或链接后能够正确跳转到目标页面。
+    dependencies:
+      - REQ-1
+      - REQ-2
+      - REQ-4
+    scenarios:
+      - id: REQ-5:SCE-0
+        name: 路由测试模块初始化
+        prerequisites:
+          - ROOT:SCE-0
+        steps:
+          - action: 初始化路由测试环境
+            expectation: 确认前端路由配置已完成，所有需要测试的路由均已注册。
+    children:
+      - id: REQ-5-1
+        name: 忘记密码路由跳转测试
+        description: 测试从登录页点击"忘记密码"链接是否能正确跳转到找回密码页面。
+        dependencies:
+          - REQ-1-2
+          - REQ-1-3
+        scenarios:
+          - id: REQ-5-1:SCE-0
+            name: 登录页忘记密码链接跳转测试
+            prerequisites:
+              - REQ-1-2:SCE-0 (已在登录页)
+            steps:
+              - action: 定位页面上的"忘记密码？"链接
+                expectation: 链接元素存在且可见。
+              - action: 点击"忘记密码？"链接
+                expectation: 页面URL变更为找回密码页面路径（如/forgot-password 或 /find_password），页面成功跳转并渲染找回密码表单。
+              - action: 验证页面内容
+                expectation: 找回密码页面包含用户名输入框、证件类型选择、姓名输入框、证件号码输入框、手机号输入框及"下一步"按钮。
+          - id: REQ-5-1:SCE-1
+            name: 忘记密码页面路由参数测试
+            prerequisites:
+              - REQ-5-1:SCE-0 (已跳转到找回密码页)
+            steps:
+              - action: 检查浏览器地址栏URL
+                expectation: URL格式正确，不包含异常参数或错误路径。
+              - action: 直接访问找回密码页面URL
+                expectation: 页面能够直接加载，不依赖从登录页跳转。
+          - id: REQ-5-1:SCE-2
+            name: 忘记密码路由返回测试
+            prerequisites:
+              - REQ-5-1:SCE-0 (已在找回密码页)
+            steps:
+              - action: 点击浏览器后退按钮
+                expectation: 页面返回到登录页面，登录表单正常显示。
+              - action: 点击"返回登录"链接（如存在）
+                expectation: 页面跳转回登录页面。
+      - id: REQ-5-2
+        name: 车票预订路由跳转测试
+        description: 测试从车次列表页点击"预订"按钮是否能正确跳转到订单填写页面，并携带正确的车次信息。
+        dependencies:
+          - REQ-2-2
+          - REQ-4-2
+        scenarios:
+          - id: REQ-5-2:SCE-0
+            name: 未登录状态预订跳转测试
+            prerequisites:
+              - REQ-2-2:SCE-0 (已在车次列表页)
+            steps:
+              - action: 在未登录状态下点击某车次的"预订"按钮
+                expectation: 系统检测到未登录状态，页面跳转到登录页面，并记录原始请求，登录成功后应能继续预订流程。
+          - id: REQ-5-2:SCE-1
+            name: 已登录状态预订跳转测试
+            prerequisites:
+              - REQ-1-2:SCE-1 (已登录)
+              - REQ-2-2-3:SCE-0 (已在车次列表页并展示车次)
+            steps:
+              - action: 定位某个车次的"预订"按钮
+                expectation: 按钮元素存在、可见且可点击。
+              - action: 点击"预订"按钮
+                expectation: 页面URL变更为订单填写页面路径（如/order/book 或 /booking），页面成功跳转并渲染订单填写表单。
+              - action: 验证页面内容
+                expectation: 订单填写页面包含车次信息（车次号、出发站、到达站、日期、时间）、乘车人选择区域、席别选择、座位选择及"提交订单"按钮。
+          - id: REQ-5-2:SCE-2
+            name: 预订路由参数传递测试
+            prerequisites:
+              - REQ-1-2:SCE-1 (已登录)
+              - REQ-2-2-3:SCE-0 (已在车次列表页)
+            steps:
+              - action: 点击车次"G4087"的"预订"按钮
+                expectation: 页面跳转到订单填写页。
+              - action: 检查URL参数或页面回显数据
+                expectation: URL包含车次标识（如trainId或trainNo参数），或页面通过state传递；订单填写页正确显示"G4087"车次信息，包括出发站"北京南"、到达站"上海虹桥"、发车时间等。
+              - action: 验证不同车次参数
+                expectation: 返回列表页，点击另一车次（如"D123"）的"预订"按钮，订单填写页应显示"D123"的信息，参数传递正确无混淆。
+          - id: REQ-5-2:SCE-3
+            name: 预订路由异常处理测试
+            prerequisites:
+              - REQ-1-2:SCE-1 (已登录)
+            steps:
+              - action: 直接访问订单填写页面URL，不携带车次参数
+                expectation: 页面显示错误提示"缺少车次信息"或自动重定向到车次查询页，提示用户先选择车次。
+              - action: 访问订单填写页面URL，携带无效车次ID
+                expectation: 页面显示错误提示"车次不存在"或"车次信息无效"，提供返回查询页的链接。
+          - id: REQ-5-2:SCE-4
+            name: 预订路由返回测试
+            prerequisites:
+              - REQ-5-2:SCE-1 (已跳转到订单填写页)
+            steps:
+              - action: 点击浏览器后退按钮
+                expectation: 页面返回到车次列表页，查询条件和列表状态保持不变。
+              - action: 点击"返回"或"取消"按钮（如存在）
+                expectation: 页面返回到车次列表页，未生成订单数据。
+          - id: REQ-5-2:SCE-5
+            name: 无余票车次预订跳转测试
+            prerequisites:
+              - REQ-1-2:SCE-1 (已登录)
+              - REQ-2-2-3:SCE-0 (已在车次列表页)
+            steps:
+              - action: 定位显示"无票"或余票为0的车次
+                expectation: 车次列表中该车次的"预订"按钮为灰色不可点击状态，或显示"无票"标识。
+              - action: 尝试点击该车次的"预订"按钮（如可点击）
+                expectation: 若可点击，系统应阻止跳转或跳转后立即提示"该车次无余票"，并返回列表页或允许选择候补。
